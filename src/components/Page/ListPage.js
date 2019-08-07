@@ -1,25 +1,7 @@
 import React from "react"
-import { PageHeader } from 'antd';
 
 import DataList from "./DataList"
-import {
-    Button,
-    Col,
-    DatePicker,
-    Divider,
-    Dropdown,
-    Form,
-    Icon,
-    Input,
-    Menu,
-    message,
-    Modal,
-    Popconfirm,
-    Row,
-    Select,
-    Switch,
-    Tabs
-} from "antd"
+import { PageHeaderWrapper } from "@ant-design/pro-layout"
 
 /**
  * meta 包含
@@ -39,18 +21,17 @@ class ListPage extends DataList {
         const { title, content, tabList, tabDefaultActiveKey } = this.meta
 
         return (
-            <PageHeader
+            <PageHeaderWrapper
                 title={title && title + "列表"}
                 content={
                     content ||
                     (this.renderHeaderContent && this.renderHeaderContent())
                 }
                 tabList={tabList}
-                tabDefaultActiveKey={tabDefaultActiveKey}
-                onTabChange={this.handleTabChange}
+                tabActiveKey={tabDefaultActiveKey}
             >
                 {super.render()}
-            </PageHeader>
+            </PageHeaderWrapper>
         )
     }
 }

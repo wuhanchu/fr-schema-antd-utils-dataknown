@@ -1,8 +1,10 @@
-import React, { PureComponent } from "react"
-import {getInfoColumn} from "fr-schema"
-import { schemas } from "../../index"
-import { createForm } from "../../utils/component"
-import "./InfoForm.less"
+import React, { PureComponent } from 'react'
+import frSchema  from '@/outter/fr-schema-bak'
+import { schemas } from '../../index'
+import { createForm } from '../../utils/component'
+import './InfoForm.less'
+
+const { getInfoColumn } = frSchema
 
 /**
  * values: null,
@@ -16,40 +18,40 @@ import "./InfoForm.less"
  * colNum: null,
  */
 class InfoForm extends PureComponent {
-    constructor(props) {
-        super(props)
-
-        this.state = {
-            data: props.values || {},
-            updateFlag: !!props.values
-        }
-
-        // set column
-        this.state.column = getInfoColumn(
-            props.schema || schemas[props.resource],
-            props.action
-        )
+  constructor(props) {
+    super(props)
+    
+    this.state = {
+      data: props.values || {},
+      updateFlag: !!props.values
     }
-
-    renderContent(data) {
-        const { column } = this.state
-        const { form, action, style, otherTabs, extend, colNum } = this.props
-        return createForm.bind(this)(
-            column,
-            data,
-            form,
-            action,
-            style,
-            otherTabs,
-            extend,
-            colNum
-        )
-    }
-
-    render() {
-        const { data } = this.state
-        return this.renderContent(data)
-    }
+    
+    // set column
+    this.state.column = getInfoColumn(
+      props.schema || schemas[props.resource],
+      props.action
+    )
+  }
+  
+  renderContent(data) {
+    const { column } = this.state
+    const { form, action, style, otherTabs, extend, colNum } = this.props
+    return createForm.bind(this)(
+      column,
+      data,
+      form,
+      action,
+      style,
+      otherTabs,
+      extend,
+      colNum
+    )
+  }
+  
+  render() {
+    const { data } = this.state
+    return this.renderContent(data)
+  }
 }
 
 export default InfoForm

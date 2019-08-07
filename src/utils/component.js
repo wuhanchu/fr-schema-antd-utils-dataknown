@@ -14,12 +14,11 @@ import {
 } from "antd"
 
 import dictComponents from "./componentDict"
-import { actions } from "fr-schema"
+import frSchema from "@/outter/fr-schema-bak"
 import styles from "../styles/basic.less"
 import clone from "clone"
 import { globalStyle } from "../styles/global"
 import moment from "moment"
-import { schemaFieldType } from "fr-schema"
 
 const SelectOption = Select.Option
 const MentionsOption = Mentions.Option
@@ -27,6 +26,7 @@ const MentionsOption = Mentions.Option
 const FormItem = Form.Item
 const TabPane = Tabs.TabPane
 
+const { actions, dict, schemaFieldType } = frSchema
 /**
  * get the table column
  * @param schema
@@ -281,23 +281,22 @@ function getItemDefaultValue(item) {
     // 多选下拉框
     if (item.type == schemaFieldType.MultiSelect) {
         let defaultValue = []
-        Object.values(item.dict).forEach(dictItem => {
+        item.dict && Object.values(item.dict).forEach(dictItem => {
             if (dictItem.default) {
                 defaultValue = defaultValue || []
                 defaultValue.push(dictItem.value)
             }
         })
 
-        return defaultValue
+        return (defaultValue || [])
     }
     // 下拉框
-    else if (tem.type == schemaFieldType.Select) {
+    else if (item.type == schemaFieldType.Select) {
         let defaultValue = null
-        Object.values(item.dict).some(dictItem => {
+        item.dict && Object.values(item.dict).some(dictItem => {
             // 在from下的默认值由 form 来传入
-            if (!props.form && dictItem.default) {
-                props.defaultValue = dictItem.value
-
+            if (dictItem.default) {
+                defaultValue = dictItem.value
                 return true
             }
         })
