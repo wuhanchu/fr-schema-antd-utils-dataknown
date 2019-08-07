@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react"
 import { Form, message, Modal } from "antd"
 import InfoForm from "./InfoForm"
-import frSchema from "@/outter/fr-schema-bak"
+import frSchema from "@/outter/fr-schema/src"
 
 const { actions, getPrimaryKey } = frSchema
 const confirm = Modal.confirm

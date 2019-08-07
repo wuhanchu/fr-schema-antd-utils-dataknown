@@ -14,7 +14,7 @@ import {
 } from "antd"
 
 import dictComponents from "./componentDict"
-import frSchema from "@/outter/fr-schema-bak"
+import frSchema from "@/outter/fr-schema/src"
 import styles from "../styles/basic.less"
 import clone from "clone"
 import { globalStyle } from "../styles/global"

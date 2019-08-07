@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import frSchema  from '@/outter/fr-schema-bak'
+import frSchema from "@/outter/fr-schema/src"
 import { schemas } from '../../index'
 import { createForm } from '../../utils/component'
 import './InfoForm.less'

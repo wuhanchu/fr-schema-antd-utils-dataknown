@@ -6,7 +6,7 @@ import { createFilter, getListColumn } from "../../utils/component"
 import Authorized from "../Authorized/Authorized"
 import styles from "./DataList.less"
 import InfoModal from "./InfoModal"
-import frSchema from "@/outter/fr-schema-bak"
+import frSchema from "@/outter/fr-schema/src"
 
 const { actions, schemas, decorateList, decorateItem, getPrimaryKey } = frSchema
 const getValue = obj =>
