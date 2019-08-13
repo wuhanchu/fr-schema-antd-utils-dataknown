@@ -1,5 +1,5 @@
 import StandardTable from "../StandardTable"
-import { Button, Card, Col, Divider, message, Popconfirm, Row } from "antd"
+import { Button, Card, Col, Divider, message, Popconfirm, Row ,Form} from "antd"
 import isEqual from "lodash.isequal"
 import React, { Fragment, PureComponent } from "react"
 import { createFilter, getListColumn } from "../../utils/component"
@@ -129,10 +129,9 @@ class DataList extends PureComponent {
      * 表格操作列
      * @returns {{width: string, fixed: (*|string), title: string, render: (function(*, *=): *)}}
      */
-    renderOperateColumn(props=[]) {
+    renderOperateColumn(props = []) {
         const { scroll } = this.meta
         const { showEdit = true, showDelete = true } = props
-        debugger
         return (
             !this.props.readOnly && {
                 title: "操作",
@@ -630,9 +629,6 @@ class DataList extends PureComponent {
         )
     }
 
-    /**
-     * render the info modal
-     */
 
     /**
      * 渲染信息弹出框
@@ -677,6 +673,31 @@ class DataList extends PureComponent {
         // Display fallback UI
         this.setState({ hasError: true })
         console.log("component error", error)
+    }
+
+    /**
+     * create the common search bar
+     * @param  {Object} filters the schema filed list
+     */
+    createSearchBar(filters) {
+        return (
+            <Form onSubmit={this.handleSearch}>
+                <Row gutter={8} type="flex">
+                    {filters}
+                    <Col>
+                        <Button type="primary" htmlType="submit">
+                            查询
+                        </Button>
+                        <Button
+                            style={{ marginLeft: 4 }}
+                            onClick={this.handleFormReset}
+                        >
+                            重置
+                        </Button>
+                    </Col>
+                </Row>
+            </Form>
+        )
     }
 
     render() {

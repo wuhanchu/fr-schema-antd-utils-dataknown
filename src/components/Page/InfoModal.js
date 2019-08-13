@@ -58,7 +58,7 @@ export class PureInfoModal extends PureComponent {
     /**
      * 确认保存
      */
-    onSave = () => {
+    handleSave = () => {
         const { form, handleUpdate, handleAdd, action, addArgs } = this.props
         const { values } = this.state
 
@@ -68,10 +68,11 @@ export class PureInfoModal extends PureComponent {
                 let param = addArgs ? { ...addArgs } : {}
                 const idKey = getPrimaryKey(this.schema)
 
+
+                // set the id value
                 if (values) {
                     const idValue = values[idKey || "id"]
-                    param.id = idValue
-                    param[idKey] = idValue
+                    idValue && (param[idKey] = idValue)
                 }
 
                 Object.keys(fieldsValue).forEach(key => {
@@ -158,6 +159,7 @@ export class PureInfoModal extends PureComponent {
                     return
                 }
             })
+            return false;
         } else {
             this.closeModel()
         }
@@ -195,11 +197,14 @@ export class PureInfoModal extends PureComponent {
                 destroyOnClose
                 title={title || "" + "信息"}
                 visible={true}
-                onOk={this.onSave}
+                onOk={this.handleSave}
                 okButtonProps={{ loading }}
                 {...otherProps}
                 onCancel={() => {
-                    return this.beforeFormClose()
+                    if ( this.beforeFormClose() === false) {
+                        return false
+                    }
+                    otherProps.onCancel && otherProps.onCancel()
                 }}
             >
                 {this.renderForm()}

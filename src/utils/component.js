@@ -10,7 +10,8 @@ import {
     Row,
     Select,
     Tabs,
-    Upload
+    Upload,
+    Transfer
 } from "antd"
 
 import dictComponents from "./componentDict"
@@ -187,7 +188,7 @@ export function createInput(
     } else {
         component = createComponent.bind(this)(
             item,
-            data,
+            initialValue,
             props,
             action,
             defaultWidth
@@ -231,7 +232,6 @@ export function createInput(
 
     //  delete the defaultValue
     // component.props && (delete component.props.defaultValue)
-
     return (
         (!this ||
             !this.state ||
@@ -281,25 +281,27 @@ function getItemDefaultValue(item) {
     // 多选下拉框
     if (item.type == schemaFieldType.MultiSelect) {
         let defaultValue = []
-        item.dict && Object.values(item.dict).forEach(dictItem => {
-            if (dictItem.default) {
-                defaultValue = defaultValue || []
-                defaultValue.push(dictItem.value)
-            }
-        })
+        item.dict &&
+            Object.values(item.dict).forEach(dictItem => {
+                if (dictItem.default) {
+                    defaultValue = defaultValue || []
+                    defaultValue.push(dictItem.value)
+                }
+            })
 
-        return (defaultValue || [])
+        return defaultValue || []
     }
     // 下拉框
     else if (item.type == schemaFieldType.Select) {
         let defaultValue = null
-        item.dict && Object.values(item.dict).some(dictItem => {
-            // 在from下的默认值由 form 来传入
-            if (dictItem.default) {
-                defaultValue = dictItem.value
-                return true
-            }
-        })
+        item.dict &&
+            Object.values(item.dict).some(dictItem => {
+                // 在from下的默认值由 form 来传入
+                if (dictItem.default) {
+                    defaultValue = dictItem.value
+                    return true
+                }
+            })
 
         return defaultValue
     }
@@ -319,18 +321,30 @@ export function createComponent(item, data, props, action, defaultWidth = 200) {
     switch (type) {
         case "Avatar":
             component = <Avatar {...props} />
-
+            break
+        case schemaFieldType.Transfer:
+            component = (
+                <Transfer
+                    targetKeys={data}
+                    render={item => item.name}
+                    showSearch
+                    {...props}
+                    onChange={(targetKeys, direction, moveKeys) => {
+                      console.debug("targetKeys",targetKeys)
+                      props.onChange(targetKeys)
+                    }}
+                />
+            )
             break
         case "MultiSelect":
             const mode = "multiple"
-            //default value
 
+            //default value
             if (action === actions.add) {
                 Object.values(item.dict).forEach(dictItem => {
                     defaultValue = getItemDefaultValue(item)
                 })
             }
-
         case "Select":
             //default value
             if (!defaultValue && action === actions.add && item.dict) {
