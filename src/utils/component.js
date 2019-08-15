@@ -330,8 +330,8 @@ export function createComponent(item, data, props, action, defaultWidth = 200) {
                     showSearch
                     {...props}
                     onChange={(targetKeys, direction, moveKeys) => {
-                      console.debug("targetKeys",targetKeys)
-                      props.onChange(targetKeys)
+                        console.debug("targetKeys", targetKeys)
+                        props.onChange(targetKeys)
                     }}
                 />
             )

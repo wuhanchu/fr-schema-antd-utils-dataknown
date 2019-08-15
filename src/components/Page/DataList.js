@@ -193,7 +193,7 @@ class DataList extends PureComponent {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.meta && nextProps.meta !== this.props.meta) {
-            console.log("DataList componentWillReceiveProps")
+            console.log("DataList ")
             this.meta = nextProps.meta
             this.columns = null
             this.refreshMeta()
