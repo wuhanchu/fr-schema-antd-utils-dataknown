@@ -96,7 +96,7 @@ export class PureInfoModal extends PureComponent {
                     param = this.props.convertParam(param)
                 }
 
-                if (action === actions.update) {
+                if (action === actions.edit) {
                     await handleUpdate(param)
                 } else {
                     await handleAdd(param)

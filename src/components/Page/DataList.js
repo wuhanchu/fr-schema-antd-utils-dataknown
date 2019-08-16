@@ -151,7 +151,7 @@ class DataList extends PureComponent {
                                         this.handleModalVisible(
                                             true,
                                             record,
-                                            actions.update
+                                            actions.edit
                                         )
                                     }
                                 >

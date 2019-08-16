@@ -147,10 +147,10 @@ export function createInput(
         form,
         readOnly:
             action === actions.show ||
-            (action === actions.update && item.readOnly),
+            (action === actions.edit && item.readOnly),
         disabled:
             action === actions.show ||
-            (action === actions.update && item.readOnly),
+            (action === actions.edit && item.readOnly),
         onChange: function(event) {
             const value =
                 event && event.currentTarget ? event.currentTarget.value : event
@@ -361,7 +361,7 @@ export function createComponent(item, data, props, action, defaultWidth = 200) {
                         if (
                             dictItem.condition &&
                             (action === actions.add ||
-                                action === actions.update)
+                                action === actions.edit)
                         ) {
                             if (dictItem.condition instanceof Function) {
                                 if (!dictItem.condition(this.state.data)) {
@@ -603,7 +603,7 @@ export function createForm(
 
         // 修改隐藏 只读
         if (
-            action === actions.update &&
+            action === actions.edit &&
             item.editHide &&
             !data[item.dataIndex]
         ) {
