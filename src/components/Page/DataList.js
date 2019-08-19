@@ -1,5 +1,14 @@
 import StandardTable from "../StandardTable"
-import { Button, Card, Col, Divider, message, Popconfirm, Row ,Form} from "antd"
+import {
+    Button,
+    Card,
+    Col,
+    Divider,
+    message,
+    Popconfirm,
+    Row,
+    Form
+} from "antd"
 import isEqual from "lodash.isequal"
 import React, { Fragment, PureComponent } from "react"
 import { createFilter, getListColumn } from "../../utils/component"
@@ -133,6 +142,7 @@ class DataList extends PureComponent {
         const { scroll } = this.meta
         const { showEdit = true, showDelete = true } = props
         return (
+            !this.meta.readOnly &&
             !this.props.readOnly && {
                 title: "操作",
                 fixed: scroll && "right",
@@ -628,7 +638,6 @@ class DataList extends PureComponent {
             />
         )
     }
-
 
     /**
      * 渲染信息弹出框
