@@ -309,8 +309,11 @@ function getItemDefaultValue(item) {
 
 /**
  * 创建输入控件
- * @param item filed模型
- * @returns {React.SFCElement<{[p: string]: *}>}
+ * @param {*} item field 信息
+ * @param {*} data 数据
+ * @param {*} props 控件的props
+ * @param {*} action action操作
+ * @param {*} defaultWidth 宽度
  */
 export function createComponent(item, data, props, action, defaultWidth = 200) {
     const type = item.type || "Input"
