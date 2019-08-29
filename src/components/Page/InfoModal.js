@@ -209,7 +209,9 @@ export class PureInfoModal extends PureComponent {
                 title={title || "" + "信息"}
                 visible={true}
                 onOk={this.handleSave}
-                okButtonProps={{ loading: loadingSubmit }}
+                okButtonProps={{
+                    loading: this.props.loadingSubmit || loadingSubmit
+                }}
                 {...otherProps}
                 onCancel={() => {
                     if (this.beforeFormClose() === false) {
