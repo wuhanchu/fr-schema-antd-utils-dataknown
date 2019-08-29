@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react"
-import { Form, message, Modal } from "antd"
+import { Form, message, Modal, Skeleton, Spin } from "antd"
 import InfoForm from "./InfoForm"
 import frSchema from "@/outter/fr-schema/src"
 
@@ -22,15 +22,17 @@ const confirm = Modal.confirm
  */
 export class PureInfoModal extends PureComponent {
     state = {
-        loading: false
+        loadingFetch: true
     }
 
     constructor(props) {
         super(props)
-        const { addArgs, visible, onRef, values, schema } = props
+        const { addArgs, visible, onRef, values, schema, service } = props
         this.state.visible = visible
         this.state.values = { ...(addArgs || {}), ...(values || {}) }
         this.schema = schema
+        this.service = service
+
         onRef && onRef(this)
     }
 
@@ -50,7 +52,16 @@ export class PureInfoModal extends PureComponent {
         })
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        if (this.service) {
+            const res = await this.service.getDetail({
+                id: this.state.values.id
+            })
+            this.setState({ values: res.data, loadingFetch: false })
+        } else {
+            this.setState({ loadingFetch: false })
+        }
+
         const { componentDidMount } = this.props
         componentDidMount && componentDidMount()
     }
@@ -62,12 +73,11 @@ export class PureInfoModal extends PureComponent {
         const { form, handleUpdate, handleAdd, action, addArgs } = this.props
         const { values } = this.state
 
-        this.setState({ loading: true })
+        this.setState({ loadingSubmit: true })
         form.validateFields(async (err, fieldsValue) => {
             try {
                 let param = addArgs ? { ...addArgs } : {}
                 const idKey = getPrimaryKey(this.schema)
-
 
                 // set the id value
                 if (values) {
@@ -102,7 +112,7 @@ export class PureInfoModal extends PureComponent {
                     await handleAdd(param)
                 }
             } finally {
-                this.setState({ loading: false })
+                this.setState({ loadingSubmit: false })
             }
         })
     }
@@ -159,7 +169,7 @@ export class PureInfoModal extends PureComponent {
                     return
                 }
             })
-            return false;
+            return false
         } else {
             this.closeModel()
         }
@@ -177,7 +187,7 @@ export class PureInfoModal extends PureComponent {
     }
 
     render() {
-        const { loading } = this.state
+        const { loadingSubmit } = this.state
 
         const { title, action, ...otherProps } = this.props
         const { visible, values } = this.state
@@ -198,16 +208,22 @@ export class PureInfoModal extends PureComponent {
                 title={title || "" + "信息"}
                 visible={true}
                 onOk={this.handleSave}
-                okButtonProps={{ loading }}
+                okButtonProps={{ loadingSubmit }}
                 {...otherProps}
                 onCancel={() => {
-                    if ( this.beforeFormClose() === false) {
+                    if (this.beforeFormClose() === false) {
                         return false
                     }
                     otherProps.onCancel && otherProps.onCancel()
                 }}
             >
-                {this.renderForm()}
+                {this.state.loadingFetch ? (
+                    <Skeleton></Skeleton>
+                ) : (
+                    <Spin spinning={this.props.loadingSubmit}>
+                        {this.renderForm()}
+                    </Spin>
+                )}
             </Modal>
         )
     }

@@ -7,7 +7,8 @@ import {
     message,
     Popconfirm,
     Row,
-    Form
+    Form,
+    Spin
 } from "antd"
 import isEqual from "lodash.isequal"
 import React, { Fragment, PureComponent } from "react"
@@ -524,7 +525,6 @@ class DataList extends PureComponent {
         if (this.props.renderOperationButtons) {
             return this.props.renderOperationButtons()
         }
-        console.log("this.meta.authority", this.meta.authority)
 
         return (
             <Authorized
@@ -555,7 +555,11 @@ class DataList extends PureComponent {
 
         return (
             <div className={styles.tableListOperator}>
-                <Row type="flex" justify="space-between">
+                <Row
+                    type="flex"
+                    justify="space-between"
+                    className={styles.operationBar}
+                >
                     <Col>
                         {this.renderOperationButtons()}
                         {showSelect &&
@@ -670,6 +674,7 @@ class DataList extends PureComponent {
                     values={infoData}
                     addArgs={addArgs}
                     meta={this.meta}
+                    service = {this.service}
                     schema={this.schema}
                     {...this.meta.infoProps}
                     {...customProps}
@@ -732,7 +737,7 @@ class DataList extends PureComponent {
             searchBar = this.renderSearchBar && this.renderSearchBar()
         }
 
-        return (
+        return !this.state.loading ? (
             <Fragment>
                 <Card bordered={false} style={{ width: "100%" }}>
                     <div className={styles.tableListForm}>{searchBar}</div>
@@ -749,6 +754,8 @@ class DataList extends PureComponent {
                 {modalVisible && this.renderInfoModal()}
                 {this.renderExtend && this.renderExtend()}
             </Fragment>
+        ) : (
+            <Spin></Spin>
         )
     }
 }
