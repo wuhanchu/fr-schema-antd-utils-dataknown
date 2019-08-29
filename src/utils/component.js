@@ -256,70 +256,25 @@ export function createInput(
 }
 
 /**
- * 转换字段定义成 fieldDecorator
- * @param item
- * @returns {{rules: {message: (boolean|string), required: *}[]}}
- */
-export function convertDecoratorProps(item) {
-    const { rules, ...otherDecoratorProps } = item.decoratorProps || {}
-    const decoratorProps = {
-        rules: [
-            {
-                required: item.required,
-                message: `请输入${item.title}！`
-            }
-        ].concat(rules || []),
-        ...(otherDecoratorProps || {})
-    }
-    return decoratorProps
-}
-
-/**
- * 获取下拉框默认值
- */
-function getItemDefaultValue(item) {
-    // 多选下拉框
-    if (item.type == schemaFieldType.MultiSelect) {
-        let defaultValue = []
-        item.dict &&
-            Object.values(item.dict).forEach(dictItem => {
-                if (dictItem.default) {
-                    defaultValue = defaultValue || []
-                    defaultValue.push(dictItem.value)
-                }
-            })
-
-        return defaultValue || []
-    }
-    // 下拉框
-    else if (item.type == schemaFieldType.Select) {
-        let defaultValue = null
-        item.dict &&
-            Object.values(item.dict).some(dictItem => {
-                // 在from下的默认值由 form 来传入
-                if (dictItem.default) {
-                    defaultValue = dictItem.value
-                    return true
-                }
-            })
-
-        return defaultValue
-    }
-}
-
-/**
  * 创建输入控件
  * @param {*} item field 信息
  * @param {*} data 数据
- * @param {*} props 控件的props
+ * @param {*} props 扩展的props
  * @param {*} action action操作
- * @param {*} defaultWidth 宽度
+ * @param {*} defaultWidth 默认宽度
  */
-export function createComponent(item, data, props, action, defaultWidth = 200) {
+export function createComponent(
+    item,
+    data,
+    extraProps = {},
+    action = actions.add,
+    defaultWidth = 200
+) {
     const type = item.type || "Input"
     let component,
         defaultValue = null
     let options = []
+    let props = { ...item.props, ...extraProps }
 
     switch (type) {
         case "Avatar":
@@ -363,8 +318,7 @@ export function createComponent(item, data, props, action, defaultWidth = 200) {
                         //check the dict Whether it matches
                         if (
                             dictItem.condition &&
-                            (action === actions.add ||
-                                action === actions.edit)
+                            (action === actions.add || action === actions.edit)
                         ) {
                             if (dictItem.condition instanceof Function) {
                                 if (!dictItem.condition(this.state.data)) {
@@ -494,6 +448,58 @@ export function createComponent(item, data, props, action, defaultWidth = 200) {
 }
 
 /**
+ * 转换字段定义成 fieldDecorator
+ * @param item
+ * @returns {{rules: {message: (boolean|string), required: *}[]}}
+ */
+export function convertDecoratorProps(item) {
+    const { rules, ...otherDecoratorProps } = item.decoratorProps || {}
+    const decoratorProps = {
+        rules: [
+            {
+                required: item.required,
+                message: `请输入${item.title}！`
+            }
+        ].concat(rules || []),
+        ...(otherDecoratorProps || {})
+    }
+    return decoratorProps
+}
+
+/**
+ * 获取下拉框默认值
+ */
+function getItemDefaultValue(item) {
+    // 多选下拉框
+    if (item.type == schemaFieldType.MultiSelect) {
+        let defaultValue = []
+        item.dict &&
+            Object.values(item.dict).forEach(dictItem => {
+                if (dictItem.default) {
+                    defaultValue = defaultValue || []
+                    defaultValue.push(dictItem.value)
+                }
+            })
+
+        return defaultValue || []
+    }
+    // 下拉框
+    else if (item.type == schemaFieldType.Select) {
+        let defaultValue = null
+        item.dict &&
+            Object.values(item.dict).some(dictItem => {
+                // 在from下的默认值由 form 来传入
+                if (dictItem.default) {
+                    defaultValue = dictItem.value
+                    return true
+                }
+            })
+
+        return defaultValue
+    }
+}
+
+/**
  * 根据字段类型转换初始值
  * @param item
  * @param initialValue
@@ -605,11 +611,7 @@ export function createForm(
         }
 
         // 修改隐藏 只读
-        if (
-            action === actions.edit &&
-            item.editHide &&
-            !data[item.dataIndex]
-        ) {
+        if (action === actions.edit && item.editHide && !data[item.dataIndex]) {
             return
         }
 

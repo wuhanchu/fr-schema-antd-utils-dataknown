@@ -22,7 +22,8 @@ const confirm = Modal.confirm
  */
 export class PureInfoModal extends PureComponent {
     state = {
-        loadingFetch: true
+        loadingFetch: true,
+        loadingSubmit: false
     }
 
     constructor(props) {
@@ -54,10 +55,10 @@ export class PureInfoModal extends PureComponent {
 
     async componentDidMount() {
         if (this.service) {
-            const res = await this.service.getDetail({
+            const data = await this.service.getDetail({
                 id: this.state.values.id
             })
-            this.setState({ values: res.data, loadingFetch: false })
+            this.setState({ values: data, loadingFetch: false })
         } else {
             this.setState({ loadingFetch: false })
         }
@@ -208,7 +209,7 @@ export class PureInfoModal extends PureComponent {
                 title={title || "" + "信息"}
                 visible={true}
                 onOk={this.handleSave}
-                okButtonProps={{ loadingSubmit }}
+                okButtonProps={{ loading: loadingSubmit }}
                 {...otherProps}
                 onCancel={() => {
                     if (this.beforeFormClose() === false) {
@@ -220,9 +221,7 @@ export class PureInfoModal extends PureComponent {
                 {this.state.loadingFetch ? (
                     <Skeleton></Skeleton>
                 ) : (
-                    <Spin spinning={this.props.loadingSubmit}>
-                        {this.renderForm()}
-                    </Spin>
+                    <Spin spinning={loadingSubmit}>{this.renderForm()}</Spin>
                 )}
             </Modal>
         )
