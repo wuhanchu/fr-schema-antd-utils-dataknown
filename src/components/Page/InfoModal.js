@@ -54,7 +54,7 @@ export class PureInfoModal extends PureComponent {
     }
 
     async componentDidMount() {
-        if (this.service) {
+        if (this.service && this.state.values.id) {
             const data = await this.service.getDetail({
                 id: this.state.values.id
             })
