@@ -274,7 +274,7 @@ export function createComponent(
     let component,
         defaultValue = null
     let options = []
-    let props = { ...item.props, ...extraProps }
+    let props = { value: data, ...item.props, ...extraProps }
 
     switch (type) {
         case "Avatar":
@@ -374,6 +374,7 @@ export function createComponent(
                     allowClear
                     style={{ width: defaultWidth, ...(item.style || {}) }}
                     mode={mode}
+                    value={data}
                     optionFilterProp="children"
                     placeholder={!props.readOnly && "请选择"}
                     disabled={props.readOnly}
