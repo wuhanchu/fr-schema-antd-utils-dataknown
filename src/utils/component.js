@@ -188,7 +188,7 @@ export function createInput(
     } else {
         component = createComponent.bind(this)(
             item,
-            initialValue,
+            null,
             props,
             action,
             defaultWidth
@@ -258,7 +258,7 @@ export function createInput(
 /**
  * 创建输入控件
  * @param {*} item field 信息
- * @param {*} data 数据
+ * @param {*} value 数据
  * @param {*} props 扩展的props
  * @param {*} action action操作
  * @param {*} defaultWidth 默认宽度
@@ -274,7 +274,12 @@ export function createComponent(
     let component,
         defaultValue = null
     let options = []
-    let props = { value: data, ...item.props, ...extraProps }
+
+    let props = { ...item.props, ...extraProps }
+
+    if (data) {
+        props.value = data
+    }
 
     switch (type) {
         case "Avatar":
@@ -374,7 +379,7 @@ export function createComponent(
                     allowClear
                     style={{ width: defaultWidth, ...(item.style || {}) }}
                     mode={mode}
-                    value={data}
+                    // value={data}
                     optionFilterProp="children"
                     placeholder={!props.readOnly && "请选择"}
                     disabled={props.readOnly}
