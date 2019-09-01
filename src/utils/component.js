@@ -177,6 +177,11 @@ export function createInput(
 
     // 是否有定制方法
     form && delete props.defaultValue
+    let tempData = null
+    if (item.type === schemaFieldType.Transfer) {
+        tempData = data[item.dataIndex]
+    }
+
     if (item.renderInput) {
         let tempProps = {
             style: item.style || { width: defaultWidth },
@@ -184,11 +189,16 @@ export function createInput(
             ...props
         }
 
-        component = item.renderInput.bind(this)(item, data, tempProps, action)
+        component = item.renderInput.bind(this)(
+            item,
+            tempData,
+            tempProps,
+            action
+        )
     } else {
         component = createComponent.bind(this)(
             item,
-            null,
+            tempData,
             props,
             action,
             defaultWidth
