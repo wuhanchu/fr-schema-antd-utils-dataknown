@@ -40,6 +40,21 @@ const getValue = obj =>
  * }
  */
 class DataList extends PureComponent {
+    state = {
+        data: {
+            list: [],
+            pagination: {}
+        },
+        listLoading: true,
+        modalVisible: false,
+        updateModalVisible: false,
+        expandForm: false,
+        selectedRows: [],
+        formValues: {},
+        infoData: {}
+    }
+    schema = {}
+
     constructor(props, meta) {
         super(props)
         this.init(props, meta)
@@ -674,7 +689,7 @@ class DataList extends PureComponent {
                     values={infoData}
                     addArgs={addArgs}
                     meta={this.meta}
-                    service = {this.service}
+                    service={this.service}
                     schema={this.schema}
                     {...this.meta.infoProps}
                     {...customProps}
