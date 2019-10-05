@@ -17,8 +17,16 @@ import Authorized from "../Authorized/Authorized"
 import styles from "./DataList.less"
 import InfoModal from "./InfoModal"
 import frSchema from "@/outter/fr-schema/src"
+import { exportData } from "../../utils/xlsx"
+import moment from "moment"
 
-const { actions, schemas, decorateList, decorateItem, getPrimaryKey } = frSchema
+const {
+    actions,
+    schemas,
+    decorateList,
+    decorateItem,
+    getPrimaryKey
+} = frSchema
 const getValue = obj =>
     Object.keys(obj)
         .map(key => obj[key])
@@ -109,7 +117,8 @@ class DataList extends PureComponent {
      * 更新组件的元数据信息
      */
     refreshMeta() {
-        this.schema = this.meta.schema || schemas[this.meta.resource]
+        this.schema =
+            this.props.schema || this.meta.schema || schemas[this.meta.resource]
         this.service = this.meta.service || this.service
         this.meta.idKey = frSchema.getPrimaryKey(this.schema)
 
@@ -131,9 +140,14 @@ class DataList extends PureComponent {
         const { fields } = this.meta
 
         let columns = getListColumn(this.schema, fields)
-        const operationBar = renderOperateColumn
-            ? renderOperateColumn.bind(this)()
-            : this.renderOperateColumn()
+
+        let operationBar = null
+        if (renderOperateColumn !== null) {
+            operationBar = renderOperateColumn
+                ? renderOperateColumn.bind(this)()
+                : this.renderOperateColumn()
+        }
+
         columns.sort(function(a, b) {
             return (
                 (a.orderIndex === undefined || a.orderIndex === null
@@ -246,7 +260,11 @@ class DataList extends PureComponent {
             this.setState({
                 data: {
                     ...(this.state.data || {}),
-                    list: (this.state.data && this.state.data.list) || []
+                    list:
+                        decorateList(
+                            this.state.data && this.state.data.list,
+                            this.schema
+                        ) || []
                 },
                 listLoading: false
             })
@@ -542,21 +560,50 @@ class DataList extends PureComponent {
         }
 
         return (
-            <Authorized
-                authority={this.meta.authority && this.meta.authority.add}
-                noMatch={null}
-            >
-                {!this.props.readOnly && (
+            <Fragment>
+                <Authorized
+                    authority={this.meta.authority && this.meta.authority.add}
+                    noMatch={null}
+                >
+                    {!this.props.readOnly && (
+                        <Button
+                            type="primary"
+                            onClick={() =>
+                                this.handleModalVisible(true, null, actions.add)
+                            }
+                        >
+                            新增
+                        </Button>
+                    )}
+                </Authorized>
+                <Authorized
+                    authority={
+                        this.meta.authority && this.meta.authority.export
+                    }
+                    noMatch={null}
+                >
                     <Button
-                        type="primary"
-                        onClick={() =>
-                            this.handleModalVisible(true, null, actions.add)
-                        }
+                        loading={this.state.exportLoading}
+                        onClick={async () => {
+                            this.setState({ exportLoading: true }, async () => {
+                                const columns = this.getColumns()
+                                let data = this.state.data.list
+                                if (this.props.exportMore) {
+                                    let data = await this.requestList({
+                                        pageSize: 1000000
+                                    })
+                                    data = decorateList(data.list, this.schema)
+                                }
+
+                                exportData("导出数据", data, columns)
+                                this.setState({ exportLoading: false })
+                            })
+                        }}
                     >
-                        新增
+                        导出
                     </Button>
-                )}
-            </Authorized>
+                </Authorized>
+            </Fragment>
         )
     }
 
@@ -730,7 +777,6 @@ class DataList extends PureComponent {
     }
 
     render() {
-        const { mini } = this.meta
         const { modalVisible } = this.state
         let {
             renderOperationBar,
@@ -738,17 +784,19 @@ class DataList extends PureComponent {
             renderOperateColumn
         } = this.props
 
+        // 操作栏
         let operationBar = null
         if (renderOperationBar) {
             operationBar = renderOperationBar()
-        } else {
+        } else if (this.props.renderOperationBar !== null) {
             operationBar = this.renderOperationBar && this.renderOperationBar()
         }
 
+        // 搜索栏
         let searchBar = null
         if (renderSearchBar) {
             searchBar = renderSearchBar()
-        } else {
+        } else if (renderSearchBar !== null) {
             searchBar = this.renderSearchBar && this.renderSearchBar()
         }
 
@@ -770,7 +818,7 @@ class DataList extends PureComponent {
                 {this.renderExtend && this.renderExtend()}
             </Fragment>
         ) : (
-            <Spin></Spin>
+            <Spin />
         )
     }
 }
