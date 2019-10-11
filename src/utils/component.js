@@ -107,14 +107,17 @@ function fieldToColumn(key, item) {
                         return <Avatar src={value} />
                     default:
                         return (
-                            <div
+                            <p
                                 style={{
+                                    width: item.width,
                                     wordWrap: "break-word",
-                                    wordBreak: "break-all"
+                                    wordBreak: "break-all",
+                                    textOverflow: "ellipsis",
+                                    overflow: "hidden"
                                 }}
                             >
                                 {value}
-                            </div>
+                            </p>
                         )
                 }
             })

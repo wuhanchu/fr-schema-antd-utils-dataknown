@@ -55,9 +55,13 @@ export class PureInfoModal extends PureComponent {
 
     async componentDidMount() {
         if (this.service && this.state.values.id) {
-            const data = await this.service.getDetail({
-                id: this.state.values.id
-            })
+            let data = this.state.values
+            if (this.service.getDetail) {
+                data = await this.service.getDetail({
+                    id: this.state.values.id
+                })
+            }
+
             this.setState({ values: data, loadingFetch: false })
         } else {
             this.setState({ loadingFetch: false })
@@ -221,7 +225,7 @@ export class PureInfoModal extends PureComponent {
                 }}
             >
                 {this.state.loadingFetch ? (
-                    <Skeleton></Skeleton>
+                    <Skeleton />
                 ) : (
                     <Spin spinning={loadingSubmit}>{this.renderForm()}</Spin>
                 )}
