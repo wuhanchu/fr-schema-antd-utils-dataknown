@@ -1,8 +1,8 @@
-import React, { PureComponent } from 'react'
+import React, { PureComponent } from "react"
 import frSchema from "@/outter/fr-schema/src"
-import { schemas } from '../../index'
-import { createForm } from '../../utils/component'
-import './InfoForm.less'
+import { schemas } from "../../index"
+import { createForm } from "../../utils/component"
+import "./InfoForm.less"
 
 const { getInfoColumn } = frSchema
 
@@ -18,40 +18,40 @@ const { getInfoColumn } = frSchema
  * colNum: null,
  */
 class InfoForm extends PureComponent {
-  constructor(props) {
-    super(props)
-    
-    this.state = {
-      data: props.values || {},
-      updateFlag: !!props.values
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            data: props.values || {},
+            updateFlag: !!props.values
+        }
+
+        // set column
+        this.state.column = getInfoColumn(
+            props.schema || schemas[props.resource],
+            props.action
+        )
     }
-    
-    // set column
-    this.state.column = getInfoColumn(
-      props.schema || schemas[props.resource],
-      props.action
-    )
-  }
-  
-  renderContent(data) {
-    const { column } = this.state
-    const { form, action, style, otherTabs, extend, colNum } = this.props
-    return createForm.bind(this)(
-      column,
-      data,
-      form,
-      action,
-      style,
-      otherTabs,
-      extend,
-      colNum
-    )
-  }
-  
-  render() {
-    const { data } = this.state
-    return this.renderContent(data)
-  }
+
+    renderContent(data) {
+        const { column } = this.state
+        const { form, action, style, otherTabs, extend, colNum } = this.props
+        return createForm.bind(this)(
+            column,
+            data,
+            form,
+            action,
+            style,
+            otherTabs,
+            extend,
+            colNum
+        )
+    }
+
+    render() {
+        const { data } = this.state
+        return this.renderContent(data)
+    }
 }
 
 export default InfoForm

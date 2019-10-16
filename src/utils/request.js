@@ -180,9 +180,7 @@ export default function request(
         .then(token => {
             if (token) {
                 newOptions.headers = newOptions.headers || {}
-                newOptions.headers.Authorization = `Bearer ${
-                    token.access_token
-                }`
+                newOptions.headers.Authorization = `Bearer ${token.access_token}`
             }
 
             return fetch(url, newOptions)

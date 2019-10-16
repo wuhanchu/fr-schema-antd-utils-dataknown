@@ -20,13 +20,7 @@ import frSchema from "@/outter/fr-schema/src"
 import { exportData } from "../../utils/xlsx"
 import moment from "moment"
 
-const {
-    actions,
-    schemas,
-    decorateList,
-    decorateItem,
-    getPrimaryKey
-} = frSchema
+const { actions, schemas, decorateList, decorateItem, getPrimaryKey } = frSchema
 const getValue = obj =>
     Object.keys(obj)
         .map(key => obj[key])
