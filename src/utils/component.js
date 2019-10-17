@@ -185,12 +185,17 @@ export function createInput(
         tempData = data[item.dataIndex]
     }
 
+    let tempProps = {
+        style: item.style || { width: defaultWidth },
+        placeholder: !props.readOnly && `请输入${item.title}`,
+        ...props
+    }
+    if(!form){
+        tempProps.value = initialValue
+    }
+
+
     if (item.renderInput) {
-        let tempProps = {
-            style: item.style || { width: defaultWidth },
-            placeholder: !props.readOnly && `请输入${item.title}`,
-            ...props
-        }
 
         component = item.renderInput.bind(this)(
             item,
@@ -202,7 +207,7 @@ export function createInput(
         component = createComponent.bind(this)(
             item,
             tempData,
-            props,
+            tempProps,
             action,
             defaultWidth
         )
