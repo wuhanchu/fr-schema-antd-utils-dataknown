@@ -190,13 +190,11 @@ export function createInput(
         placeholder: !props.readOnly && `请输入${item.title}`,
         ...props
     }
-    if(!form){
+    if (!form) {
         tempProps.value = initialValue
     }
 
-
     if (item.renderInput) {
-
         component = item.renderInput.bind(this)(
             item,
             tempData,
