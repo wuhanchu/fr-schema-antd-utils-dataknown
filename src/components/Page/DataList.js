@@ -704,7 +704,7 @@ class DataList extends PureComponent {
      * @param customProps 定制的属性
      * @returns {*}
      */
-    renderInfoModal(...customProps) {
+    renderInfoModal(customProps={}) {
         if (this.props.renderInfoModal) {
             return this.props.renderInfoModal()
         }

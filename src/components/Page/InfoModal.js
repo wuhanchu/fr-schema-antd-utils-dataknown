@@ -7,18 +7,19 @@ const { actions, getPrimaryKey } = frSchema
 const confirm = Modal.confirm
 
 /**
- * title: null,
- * visible: false,
- * onRef: null,
- * action: null, // the action value
- * values: null, // the record value
- * addArgs:null, // 编辑时带上的固有参数
- * handleModalVisible: null,
- * handleUpdate: null,
- * service:null,当前使用的service
- * schema:null,当前的schema
- * handleAdd: null,
- * componentDidMount: null,
+ * @param offline dont't request data from remtoe
+ * @param title  null,
+ * @param visible false,
+ * @param onRef null,
+ * @param action null, // the action value
+ * @param values null, // the record value
+ * @param addArgs:null, // 编辑时带上的固有参数
+ * @param handleModalVisible: null,
+ * @param handleUpdate: null,
+ * @param service:null,当前使用的service
+ * @param schema:null,当前的schema
+ * @param handleAdd: null,
+ * @param componentDidMount: null,
  */
 export class PureInfoModal extends PureComponent {
     state = {
@@ -54,7 +55,7 @@ export class PureInfoModal extends PureComponent {
     }
 
     async componentDidMount() {
-        if (this.service && this.state.values.id) {
+        if (this.service && this.state.values.id && !this.props.offline) {
             let data = this.state.values
             if (this.service.getDetail) {
                 data = await this.service.getDetail({
