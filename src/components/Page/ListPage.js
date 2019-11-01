@@ -14,7 +14,7 @@ import { PageHeaderWrapper } from "@ant-design/pro-layout"
 class ListPage extends DataList {
     constructor(props, meta) {
         super(props, meta)
-        this.meta = { ...(meta || {}), ...this.props.meta }
+        this.meta = { ...(this.meta || {}), ...this.props.meta }
     }
 
     render() {
