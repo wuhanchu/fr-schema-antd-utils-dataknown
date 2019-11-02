@@ -165,12 +165,18 @@ class DataList extends PureComponent {
      * 表格操作列
      * @returns {{width: string, fixed: (*|string), title: string, render: (function(*, *=): *)}}
      */
+<<<<<<< HEAD
     renderOperateColumn(props = []) {
         const {scroll} = this.meta
         const {showEdit = true, showDelete = true} = props
 
         console.debug("authorityKey", this.meta.authority)
 
+=======
+    renderOperateColumn(props = {}) {
+        const { scroll } = this.meta
+        const { showEdit = true, showDelete = true } = props
+>>>>>>> update
         return (
             !this.meta.readOnly &&
             !this.props.readOnly && {
