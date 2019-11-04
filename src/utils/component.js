@@ -1,4 +1,4 @@
-import React, {Fragment} from "react"
+import React, { Fragment } from "react"
 import {
     Avatar,
     Button,
@@ -18,7 +18,7 @@ import dictComponents from "./componentDict"
 import frSchema from "@/outter/fr-schema/src"
 import styles from "../styles/basic.less"
 import clone from "clone"
-import {globalStyle} from "../styles/global"
+import { globalStyle } from "../styles/global"
 import moment from "moment"
 import lodash from "lodash"
 
@@ -28,7 +28,7 @@ const MentionsOption = Mentions.Option
 const FormItem = Form.Item
 const TabPane = Tabs.TabPane
 
-const {actions, dict, schemaFieldType} = frSchema
+const { actions, dict, schemaFieldType } = frSchema
 
 /**
  * get the table column
@@ -106,7 +106,7 @@ function fieldToColumn(key, item) {
             (value => {
                 switch (item.type) {
                     case "Avatar":
-                        return <Avatar src={value}/>
+                        return <Avatar src={value} />
                     default:
                         return (
                             <div
@@ -156,16 +156,16 @@ export function createInput(
         disabled:
             action === actions.show ||
             (action === actions.edit && item.readOnly),
-        onChange: function (event) {
+        onChange: function(event) {
             const value =
                 event && event.currentTarget ? event.currentTarget.value : event
             if (this && this.state && this.setState && this.state.data) {
-                let data = {...this.state.data}
+                let data = { ...this.state.data }
                 data[item.dataIndex] = value
-                this.setState({data})
+                this.setState({ data })
             }
             item.onChange &&
-            item.onChange.bind(this)(value, this && this.state, form)
+                item.onChange.bind(this)(value, this && this.state, form)
         }.bind(this),
         ...item.props
     }
@@ -188,7 +188,7 @@ export function createInput(
     }
 
     let tempProps = {
-        style: item.style || {width: defaultWidth},
+        style: item.style || { width: defaultWidth },
         placeholder: !props.readOnly && `请输入${item.title}`,
         ...props
     }
@@ -222,9 +222,10 @@ export function createInput(
             break
         case "Select":
             initialValue =
-                (data && selectValueConvert(item, data[item.dataIndex]))
-            initialValue = !lodash.isNil(initialValue) ? initialValue :
-                getItemDefaultValue(item)
+                data && selectValueConvert(item, data[item.dataIndex])
+            initialValue = !lodash.isNil(initialValue)
+                ? initialValue
+                : getItemDefaultValue(item)
 
             break
         case "DatePicker":
@@ -267,8 +268,8 @@ export function createInput(
             >
                 {form
                     ? form.getFieldDecorator(item.dataIndex, decoratorProps)(
-                        component
-                    )
+                          component
+                      )
                     : component}
             </FormItem>
         )
@@ -295,7 +296,7 @@ export function createComponent(
         defaultValue = null
     let options = []
 
-    let props = {...item.props, ...extraProps}
+    let props = { ...item.props, ...extraProps }
 
     if (data) {
         props.value = data
@@ -338,58 +339,58 @@ export function createComponent(
 
             // options
             item.dict &&
-            Object.values(item.dict).forEach(
-                function (dictItem) {
-                    //check the dict Whether it matches
-                    if (
-                        dictItem.condition &&
-                        (action === actions.add || action === actions.edit)
-                    ) {
-                        if (dictItem.condition instanceof Function) {
-                            if (!dictItem.condition(this.state.data)) {
+                Object.values(item.dict).forEach(
+                    function(dictItem) {
+                        //check the dict Whether it matches
+                        if (
+                            dictItem.condition &&
+                            (action === actions.add || action === actions.edit)
+                        ) {
+                            if (dictItem.condition instanceof Function) {
+                                if (!dictItem.condition(this.state.data)) {
+                                    return
+                                }
+                            } else if (
+                                Object.keys(dictItem.condition).some(
+                                    function(key) {
+                                        return (
+                                            !this ||
+                                            !this.state ||
+                                            !this.state.data ||
+                                            this.state.data[key] !==
+                                                dictItem.condition[key]
+                                        )
+                                    }.bind(this)
+                                )
+                            ) {
                                 return
                             }
-                        } else if (
-                            Object.keys(dictItem.condition).some(
-                                function (key) {
-                                    return (
-                                        !this ||
-                                        !this.state ||
-                                        !this.state.data ||
-                                        this.state.data[key] !==
-                                        dictItem.condition[key]
-                                    )
-                                }.bind(this)
-                            )
-                        ) {
-                            return
                         }
-                    }
 
-                    // add to options
-                    return options.push(
-                        <SelectOption
-                            key={dictItem.value}
-                            value={dictItem.value}
-                        >
-                            {dictItem.remark}
-                        </SelectOption>
-                    )
-                }.bind(this)
-            )
+                        // add to options
+                        return options.push(
+                            <SelectOption
+                                key={dictItem.value}
+                                value={dictItem.value}
+                            >
+                                {dictItem.remark}
+                            </SelectOption>
+                        )
+                    }.bind(this)
+                )
 
             // judge whether show search
             const searchOptions =
                 options.length > 10
                     ? {
-                        showSearch: true,
-                        optionFilterProp: "children",
-                        filterOption: (input, option) =>
-                            option.props.children.toLowerCase &&
-                            option.props.children
-                                .toLowerCase()
-                                .indexOf(input.toLowerCase()) >= 0
-                    }
+                          showSearch: true,
+                          optionFilterProp: "children",
+                          filterOption: (input, option) =>
+                              option.props.children.toLowerCase &&
+                              option.props.children
+                                  .toLowerCase()
+                                  .indexOf(input.toLowerCase()) >= 0
+                      }
                     : {}
 
             // create the select
@@ -397,7 +398,7 @@ export function createComponent(
                 <Select
                     showSearch
                     allowClear
-                    style={{width: defaultWidth, ...(item.style || {})}}
+                    style={{ width: defaultWidth, ...(item.style || {}) }}
                     mode={mode}
                     // value={data}
                     optionFilterProp="children"
@@ -414,19 +415,19 @@ export function createComponent(
         case dictComponents.Mentions:
             // options
             item.options &&
-            Object.values(item.options).forEach(
-                function (dictItem) {
-                    // add to options
-                    return options.push(
-                        <MentionsOption
-                            key={dictItem.value}
-                            value={dictItem.value}
-                        >
-                            {dictItem.remark}
-                        </MentionsOption>
-                    )
-                }.bind(this)
-            )
+                Object.values(item.options).forEach(
+                    function(dictItem) {
+                        // add to options
+                        return options.push(
+                            <MentionsOption
+                                key={dictItem.value}
+                                value={dictItem.value}
+                            >
+                                {dictItem.remark}
+                            </MentionsOption>
+                        )
+                    }.bind(this)
+                )
 
             // create the components
             component = (
@@ -447,7 +448,7 @@ export function createComponent(
                     {...props}
                 >
                     <Button>
-                        <Icon type="upload"/> 选择文件
+                        <Icon type="upload" /> 选择文件
                     </Button>
                 </Upload>
             )
@@ -463,7 +464,7 @@ export function createComponent(
         //  other component
         default:
             component = React.createElement(dictComponents[type], {
-                style: {width: defaultWidth},
+                style: { width: defaultWidth },
                 placeholder: !props.readOnly && `请输入${item.title}`,
                 ...props
             })
@@ -479,7 +480,7 @@ export function createComponent(
  * @returns {{rules: {message: (boolean|string), required: *}[]}}
  */
 export function convertDecoratorProps(item) {
-    const {rules, ...otherDecoratorProps} = item.decoratorProps || {}
+    const { rules, ...otherDecoratorProps } = item.decoratorProps || {}
     const decoratorProps = {
         rules: [
             {
@@ -500,12 +501,12 @@ function getItemDefaultValue(item) {
     if (item.type == schemaFieldType.MultiSelect) {
         let defaultValue = []
         item.dict &&
-        Object.values(item.dict).forEach(dictItem => {
-            if (dictItem.default) {
-                defaultValue = defaultValue || []
-                defaultValue.push(dictItem.value)
-            }
-        })
+            Object.values(item.dict).forEach(dictItem => {
+                if (dictItem.default) {
+                    defaultValue = defaultValue || []
+                    defaultValue.push(dictItem.value)
+                }
+            })
 
         return defaultValue || []
     }
@@ -513,13 +514,13 @@ function getItemDefaultValue(item) {
     else if (item.type == schemaFieldType.Select) {
         let defaultValue = null
         item.dict &&
-        Object.values(item.dict).some(dictItem => {
-            // 在from下的默认值由 form 来传入
-            if (dictItem.default) {
-                defaultValue = dictItem.value
-                return true
-            }
-        })
+            Object.values(item.dict).some(dictItem => {
+                // 在from下的默认值由 form 来传入
+                if (dictItem.default) {
+                    defaultValue = dictItem.value
+                    return true
+                }
+            })
 
         return defaultValue
     }
@@ -581,9 +582,9 @@ export function createFilter(form, inSchema, span, data = {}) {
         }
 
         schema[key].dict &&
-        Object.keys(schema[key].dict).forEach(dictItem => {
-            delete schema[key].dict[dictItem].default
-        })
+            Object.keys(schema[key].dict).forEach(dictItem => {
+                delete schema[key].dict[dictItem].default
+            })
     })
 
     const filter = Object.keys(schema).map(key => {
@@ -646,15 +647,15 @@ export function createForm(
             data,
             form,
             action,
-            {style},
+            { style },
             colNum
         )
 
         if (result instanceof Array) {
-            result.push({column: item, component})
+            result.push({ column: item, component })
         } else {
             result[item.tabKey] = result[item.tabKey] || []
-            result[item.tabKey].push({column: item, component})
+            result[item.tabKey].push({ column: item, component })
         }
     })
 
@@ -739,7 +740,7 @@ function renderInputList(list, colNum) {
         if (push) {
             itemList.push(
                 <Fragment>
-                    <Divider style={{margin: "5px 2px 5px 2px"}}/>
+                    <Divider style={{ margin: "5px 2px 5px 2px" }} />
                     <div className={styles.title}>
                         {list[index + 1].column.groupName}
                     </div>
