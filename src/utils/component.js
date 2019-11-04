@@ -252,7 +252,8 @@ export function createInput(
     return (
         (!this ||
             !this.state ||
-            !(item.infoShowFunc && item.infoShowFunc(this.state.data))) && (
+            !item.infoShowFunc ||
+            item.infoShowFunc(this.state.data)) && (
             <FormItem
                 key={item.dataIndex}
                 labelCol={globalStyle.form.labelCol}
