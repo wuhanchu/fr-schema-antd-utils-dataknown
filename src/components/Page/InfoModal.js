@@ -58,9 +58,9 @@ export class PureInfoModal extends PureComponent {
         if (this.service && this.state.values.id && !this.props.offline) {
             let data = this.state.values
             if (this.service.getDetail) {
-                data = (await this.service.getDetail({
-                    meetid: this.state.values.id
-                })).data
+                const param = {}
+                param[getPrimaryKey(this.schema)] = this.state.values.id
+                data = (await this.service.getDetail(param)).data
             }
 
             this.setState({ values: data, loadingFetch: false })
