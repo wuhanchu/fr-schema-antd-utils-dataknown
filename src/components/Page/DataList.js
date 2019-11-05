@@ -460,7 +460,7 @@ class DataList extends PureComponent {
     handleUpdate = async (data, schema) => {
         // 修改当前数据
         const idKey = getPrimaryKey(this.schema)
-        this.state.data.list.some((item, index) => {
+        this.state.data && this.state.data.list.some((item, index) => {
             if (data[idKey] == item[idKey]) {
                 this.state.data.list[index] = decorateItem(data, this.schema)
                 return true
