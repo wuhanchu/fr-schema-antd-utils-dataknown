@@ -432,17 +432,18 @@ class DataList extends PureComponent {
      * @returns {Promise<void>}
      */
     async handleAdd(data, schema) {
+        // 更新
+        let response
+        if (!this.props.offline) {
+            response = await this.service.post(data, schema)
+        }
+
         // 修改当前数据
         this.state.data.list.push(decorateItem(data, this.schema))
         this.setState({
             data: this.state.data
         })
 
-        // 更新
-        let response
-        if (!this.props.offline) {
-            response = await this.service.post(data, schema)
-        }
         this.refreshList()
         message.success("添加成功")
         this.handleModalVisible()
@@ -458,28 +459,35 @@ class DataList extends PureComponent {
      * @returns {Promise<void>}
      */
     handleUpdate = async (data, schema) => {
+        // 更新
+        let response
+        if (!this.props.offline) {
+            response = await this.service.put(data, schema)
+        }
+
         // 修改当前数据
         const idKey = getPrimaryKey(this.schema)
-        this.state.data && this.state.data.list.some((item, index) => {
-            if (data[idKey] == item[idKey]) {
-                this.state.data.list[index] = decorateItem(data, this.schema)
-                return true
-            }
-        })
+        this.state.data &&
+            this.state.data.list.some((item, index) => {
+                if (data[idKey] == item[idKey]) {
+                    this.state.data.list[index] = decorateItem(
+                        data,
+                        this.schema
+                    )
+                    return true
+                }
+            })
         this.setState({
             data: this.state.data
         })
-
-        // 更新
-        if (!this.props.offline) {
-            await this.service.put(data, schema)
-        }
         this.refreshList()
         message.success("修改成功")
 
         this.handleModalVisible()
         this.handleChangeCallback && this.handleChangeCallback()
         this.props.handleChangeCallback && this.props.handleChangeCallback()
+
+        return response
     }
 
     /**
@@ -488,6 +496,12 @@ class DataList extends PureComponent {
      * @returns {Promise<void>}
      */
     handleDelete = async data => {
+        // 更新
+        let response
+        if (!this.props.offline) {
+            response = await this.service.delete({ id: data[idKey], ...data })
+        }
+
         // 修改当前数据
         const idKey = getPrimaryKey(this.schema)
         this.state.data.list.some((item, index) => {
@@ -499,16 +513,13 @@ class DataList extends PureComponent {
         this.setState({
             data: this.state.data
         })
-
-        // 更新
-        if (!this.props.offline) {
-            await this.service.delete({ id: data[idKey], ...data })
-        }
         this.refreshList()
         message.success("删除成功")
         this.handleModalVisible()
         this.handleChangeCallback && this.handleChangeCallback()
         this.props.handleChangeCallback && this.props.handleChangeCallback()
+
+        return response
     }
 
     /**
