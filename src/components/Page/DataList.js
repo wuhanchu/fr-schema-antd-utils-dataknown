@@ -502,6 +502,8 @@ class DataList extends PureComponent {
             response = await this.service.delete({ id: data[idKey], ...data })
         }
 
+        const message = (response && response.msg) || "删除成功"
+
         // 修改当前数据
         const idKey = getPrimaryKey(this.schema)
         this.state.data.list.some((item, index) => {
@@ -514,7 +516,7 @@ class DataList extends PureComponent {
             data: this.state.data
         })
         this.refreshList()
-        message.success("删除成功")
+        message.success(message)
         this.handleModalVisible()
         this.handleChangeCallback && this.handleChangeCallback()
         this.props.handleChangeCallback && this.props.handleChangeCallback()
