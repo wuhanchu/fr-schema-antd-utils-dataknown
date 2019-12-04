@@ -121,7 +121,7 @@ class DataList extends PureComponent {
                 add: this.meta.authorityKey + "_post",
                 update: this.meta.authorityKey + "_put",
                 delete: this.meta.authorityKey + "_delete",
-                export: this.meta.authorityKey + "_get",
+                export: this.meta.authorityKey + "_export",
                 show: this.meta.authorityKey + "_get_by_id"
             }
         }
