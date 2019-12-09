@@ -259,8 +259,6 @@ export function createInput(
             item.infoShowFunc(this.state.data)) && (
             <FormItem
                 key={item.dataIndex}
-                labelCol={globalStyle.form.labelCol}
-                wrapperCol={globalStyle.form.wrapperCol}
                 label={item.title + (item.unit ? "(" + item.unit + ")" : "")}
                 extra={item.extra}
                 {...itemProps}
@@ -659,9 +657,15 @@ export function createForm(
         }
     })
 
-    // other tabs
     if (result instanceof Array) {
-        return renderInputList(result, colNum)
+        return (
+            <Form
+                labelCol={globalStyle.form.labelCol}
+                wrapperCol={globalStyle.form.wrapperCol}
+            >
+                {renderInputList(result, colNum)}
+            </Form>
+        )
     } else {
         return (
             <Tabs tabPosition="left">

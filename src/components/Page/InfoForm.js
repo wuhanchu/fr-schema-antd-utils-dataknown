@@ -10,7 +10,7 @@ const { getInfoColumn } = frSchema
  * values: null,
  * form: form,
  * schema: null, // option
- * resource: null, // schema or resource  two choose one
+ * resource: null, // schema or resource  two choose one de
  * action: null,
  * style: null,
  * otherTabs: null,
@@ -34,6 +34,7 @@ class InfoForm extends PureComponent {
     }
 
     renderContent(data) {
+        console.debug("InfoForm renderContent")
         const { column } = this.state
         const { form, action, style, otherTabs, extend, colNum } = this.props
         return createForm.bind(this)(

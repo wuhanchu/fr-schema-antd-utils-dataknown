@@ -9,11 +9,14 @@ export const globalStyle = {
         input: {
             width: 300 // 输入框宽度
         },
+
         labelCol: {
-            span: 6
+            sm: { span: 24 },
+            md: { span: 6 }
         },
         wrapperCol: {
-            span: 18
+            sm: { span: 24 },
+            md: { span: 18 }
         }
     },
     // 搜索过滤器
