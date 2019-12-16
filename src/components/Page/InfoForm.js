@@ -34,9 +34,17 @@ class InfoForm extends PureComponent {
     }
 
     renderContent(data) {
-        console.debug("InfoForm renderContent")
         const { column } = this.state
-        const { form, action, style, otherTabs, extend, colNum } = this.props
+        const {
+            form,
+            action,
+            style,
+            otherTabs,
+            extend,
+            colNum,
+            ...formProps
+        } = this.props
+
         return createForm.bind(this)(
             column,
             data,
@@ -45,13 +53,16 @@ class InfoForm extends PureComponent {
             style,
             otherTabs,
             extend,
-            colNum
+            colNum,
+            formProps
         )
     }
 
     render() {
         const { data } = this.state
-        return this.renderContent(data)
+        const content = this.renderContent(data)
+        console.debug("InfoForm render content", content)
+        return content
     }
 }
 

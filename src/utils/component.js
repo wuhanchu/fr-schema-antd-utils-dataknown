@@ -10,6 +10,7 @@ import {
     Row,
     Select,
     Tabs,
+    Tooltip,
     Upload,
     Transfer
 } from "antd"
@@ -252,26 +253,31 @@ export function createInput(
 
     //  delete the defaultValue
     // component.props && (delete component.props.defaultValue)
-    return (
-        (!this ||
-            !this.state ||
-            !item.infoShowFunc ||
-            item.infoShowFunc(this.state.data)) && (
-            <FormItem
-                key={item.dataIndex}
-                label={item.title + (item.unit ? "(" + item.unit + ")" : "")}
-                extra={item.extra}
-                {...itemProps}
-                {...item.itemProps}
-            >
-                {form
-                    ? form.getFieldDecorator(item.dataIndex, decoratorProps)(
-                          component
-                      )
-                    : component}
-            </FormItem>
-        )
-    )
+    return !this ||
+        !this.state ||
+        !item.infoShowFunc ||
+        item.infoShowFunc(this.state.data) ? (
+        <Tooltip placement="right" title={item.tip}>
+            <div>
+                <FormItem
+                    key={item.dataIndex}
+                    label={
+                        item.title + (item.unit ? "(" + item.unit + ")" : "")
+                    }
+                    extra={item.extra}
+                    {...itemProps}
+                    {...item.itemProps}
+                >
+                    {form
+                        ? form.getFieldDecorator(
+                              item.dataIndex,
+                              decoratorProps
+                          )(component)
+                        : component}
+                </FormItem>
+            </div>
+        </Tooltip>
+    ) : null
 }
 
 /**
@@ -369,6 +375,7 @@ export function createComponent(
                         return options.push(
                             <SelectOption
                                 key={dictItem.value}
+                                title={dictItem.title}
                                 value={dictItem.value}
                             >
                                 {dictItem.remark}
@@ -625,7 +632,8 @@ export function createForm(
     style = {},
     otherTabs = {},
     extend = {},
-    colNum = 1
+    colNum = 1,
+    formProps
 ) {
     let result = null
 
@@ -662,8 +670,9 @@ export function createForm(
             <Form
                 labelCol={globalStyle.form.labelCol}
                 wrapperCol={globalStyle.form.wrapperCol}
+                {...formProps}
             >
-                {renderInputList(result, colNum)}
+                {renderInputList.bind(this)(result, colNum)}
             </Form>
         )
     } else {
@@ -672,8 +681,14 @@ export function createForm(
                 {Object.keys(result).map(listKey => (
                     <TabPane tab={listKey} key={listKey}>
                         {result[listKey].length < 10
-                            ? renderInputList(result[listKey], colNum)
-                            : renderInputList(result[listKey], colNum)}
+                            ? renderInputList.bind(this)(
+                                  result[listKey],
+                                  colNum
+                              )
+                            : renderInputList.bind(this)(
+                                  result[listKey],
+                                  colNum
+                              )}
                         {extend[listKey] || null}
                     </TabPane>
                 ))}
