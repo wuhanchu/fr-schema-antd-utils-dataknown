@@ -61,7 +61,6 @@ class InfoForm extends PureComponent {
     render() {
         const { data } = this.state
         const content = this.renderContent(data)
-        console.debug("InfoForm render content", content)
         return content
     }
 }

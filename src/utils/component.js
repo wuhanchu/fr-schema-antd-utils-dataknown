@@ -190,7 +190,7 @@ export function createInput(
 
     let tempProps = {
         style: item.style || { width: defaultWidth },
-        placeholder: !props.readOnly && `请输入${item.title}`,
+        placeholder: !props.readOnly ? `请输入${item.title}`:null,
         ...props
     }
     if (!form) {
