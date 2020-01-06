@@ -436,13 +436,13 @@ class DataList extends PureComponent {
         let response
         if (!this.props.offline) {
             response = await this.service.post(data, schema)
+        } else {
+            // 修改当前数据
+            this.state.data.list.push(decorateItem(data, this.schema))
+            this.setState({
+                data: this.state.data
+            })
         }
-
-        // 修改当前数据
-        this.state.data.list.push(decorateItem(data, this.schema))
-        this.setState({
-            data: this.state.data
-        })
 
         this.refreshList()
         message.success("添加成功")
