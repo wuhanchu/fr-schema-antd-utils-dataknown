@@ -318,7 +318,6 @@ export function createComponent(
                     showSearch
                     {...props}
                     onChange={(targetKeys, direction, moveKeys) => {
-                        console.debug("targetKeys", targetKeys)
                         props.onChange(targetKeys)
                     }}
                 />
