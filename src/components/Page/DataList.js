@@ -462,7 +462,7 @@ class DataList extends PureComponent {
         // 更新
         let response
         if (!this.props.offline) {
-            response = await this.service.put(data, schema)
+            response = await this.service.patch(data, schema)
         }
 
         // 修改当前数据
