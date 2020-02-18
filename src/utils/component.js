@@ -99,7 +99,10 @@ function fieldToColumn(key, item) {
         ...item,
         key,
         dataIndex:
-            item.dict || item.type === "DatePicker" || item.unit
+            item.dict ||
+            item.type === "DatePicker" ||
+            item.type === "Select" ||
+            item.unit
                 ? key + "_remark"
                 : key,
         render:
@@ -190,7 +193,7 @@ export function createInput(
 
     let tempProps = {
         style: item.style || { width: defaultWidth },
-        placeholder: !props.readOnly ? `请输入${item.title}`:null,
+        placeholder: !props.readOnly ? `请输入${item.title}` : null,
         ...props
     }
     if (!form) {
@@ -600,6 +603,7 @@ export function createFilter(form, inSchema, span, data = {}) {
                         dataIndex: key,
                         required: false,
                         props: {
+                            ...schema[key].props,
                             style: {
                                 ...((schema[key].props &&
                                     schema[key].props.style) ||

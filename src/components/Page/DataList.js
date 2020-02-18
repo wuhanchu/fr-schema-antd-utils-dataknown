@@ -8,7 +8,8 @@ import {
     Popconfirm,
     Row,
     Form,
-    Spin
+    Spin,
+    Upload
 } from "antd"
 import isEqual from "lodash.isequal"
 import React, { Fragment, PureComponent } from "react"
@@ -19,6 +20,8 @@ import InfoModal from "./InfoModal"
 import frSchema from "@/outter/fr-schema/src"
 import { exportData } from "../../utils/xlsx"
 import moment from "moment"
+import ImportModal from "@/pages/question/components/ImportModal"
+import { exportDataByTemplate } from "@/outter/fr-schema-antd-utils/src/utils/xlsx"
 
 const { actions, schemas, decorateList, decorateItem, getPrimaryKey } = frSchema
 const getValue = obj =>
@@ -30,15 +33,18 @@ const getValue = obj =>
  *
  * offline: 是否开启离线模式
  * meta:{
+ *   operateWidth: the operate column width
  *   scroll: table whether can scroll
  *   selectedRows
  *   resource: schema resource name ，
  *   schema: schema name,
  *   service: remote service,
  *   title: page title,
- *   infoProps: infoForm props
+ *   infoProps: infoForm propsrefreshMeta
  *   handleChangeCallback: data change call back
  *   queryArgs: fixed query args
+ *   allowExport
+ *   allowImport
  * }
  */
 class DataList extends PureComponent {
@@ -48,8 +54,8 @@ class DataList extends PureComponent {
             pagination: {}
         },
         listLoading: true,
-        modalVisible: false,
-        updateModalVisible: false,
+        visibleModal: false,
+        updatevisibleModal: false,
         expandForm: false,
         selectedRows: [],
         formValues: {},
@@ -70,8 +76,8 @@ class DataList extends PureComponent {
         return createFilter(this.props.form, inSchema, span)
     }
 
-    componentDidMount() {
-        this.refreshList()
+    async componentDidMount() {
+        await this.refreshList()
         this._ismounted = true
     }
 
@@ -92,8 +98,8 @@ class DataList extends PureComponent {
                 pagination: {}
             },
             listLoading: true,
-            modalVisible: false,
-            updateModalVisible: false,
+            visibleModal: false,
+            updatevisibleModal: false,
             expandForm: false,
             selectedRows: [],
             formValues: {},
@@ -173,6 +179,7 @@ class DataList extends PureComponent {
             !this.meta.readOnly &&
             !this.props.readOnly && {
                 title: "操作",
+                width: this.meta.operateWidth,
                 fixed: scroll && "right",
                 render: (text, record) => (
                     <Fragment>
@@ -186,7 +193,7 @@ class DataList extends PureComponent {
                             >
                                 <a
                                     onClick={() =>
-                                        this.handleModalVisible(
+                                        this.handlevisibleModal(
                                             true,
                                             record,
                                             actions.edit
@@ -208,8 +215,8 @@ class DataList extends PureComponent {
                                 <Divider type="vertical" />
                                 <Popconfirm
                                     title="是否要删除此行？"
-                                    onConfirm={e => {
-                                        this.handleDelete(record)
+                                    onConfirm={async e => {
+                                        await this.handleDelete(record)
                                         e.stopPropagation()
                                     }}
                                 >
@@ -229,7 +236,7 @@ class DataList extends PureComponent {
      */
     renderOperateColumnExtend(record) {}
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps, nextContents) {
         if (nextProps.meta && nextProps.meta !== this.props.meta) {
             console.log("DataList ")
             this.meta = nextProps.meta
@@ -247,7 +254,7 @@ class DataList extends PureComponent {
         }
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevState.data !== this.state.data) {
             this.props.onChange && this.props.onChange(this.state.data.list)
         }
@@ -332,9 +339,9 @@ class DataList extends PureComponent {
         Object.assign(params, filters)
 
         if (sorter.field) {
-            params.sort = `${
-                sorter.order == "ascend" ? "" : "-"
-            }${sorter.field.replace("_remark", "")}`
+            params.order = `${sorter.field.replace("_remark", "")}${
+                sorter.order == "ascend" ? ".asc" : ".desc"
+            }`
         }
 
         this.setState(
@@ -418,9 +425,9 @@ class DataList extends PureComponent {
      * @param record
      * @param action
      */
-    handleModalVisible = (flag, record, action) => {
+    handlevisibleModal = (flag, record, action) => {
         this.setState({
-            modalVisible: !!flag,
+            visibleModal: !!flag,
             infoData: record,
             action
         })
@@ -446,7 +453,7 @@ class DataList extends PureComponent {
 
         this.refreshList()
         message.success("添加成功")
-        this.handleModalVisible()
+        this.handlevisibleModal()
         this.handleChangeCallback && this.handleChangeCallback()
         this.props.handleChangeCallback && this.props.handleChangeCallback()
 
@@ -483,7 +490,7 @@ class DataList extends PureComponent {
         this.refreshList()
         message.success("修改成功")
 
-        this.handleModalVisible()
+        this.handlevisibleModal()
         this.handleChangeCallback && this.handleChangeCallback()
         this.props.handleChangeCallback && this.props.handleChangeCallback()
 
@@ -517,7 +524,7 @@ class DataList extends PureComponent {
         })
         this.refreshList()
         message.success(showMessage)
-        this.handleModalVisible()
+        this.handlevisibleModal()
         this.handleChangeCallback && this.handleChangeCallback()
         this.props.handleChangeCallback && this.props.handleChangeCallback()
 
@@ -583,43 +590,82 @@ class DataList extends PureComponent {
                         <Button
                             type="primary"
                             onClick={() =>
-                                this.handleModalVisible(true, null, actions.add)
+                                this.handlevisibleModal(true, null, actions.add)
                             }
                         >
                             新增
                         </Button>
                     )}
                 </Authorized>
-                <Authorized
-                    authority={
-                        this.meta.authority && this.meta.authority.export
-                    }
-                    noMatch={null}
-                >
-                    <Button
-                        loading={this.state.exportLoading}
-                        onClick={async () => {
-                            this.setState({ exportLoading: true }, async () => {
-                                const columns = this.getColumns(false)
-                                let data = this.state.data.list
-                                if (this.props.exportMore) {
-                                    let data = await this.requestList({
-                                        pageSize: 1000000
-                                    })
-                                    data = decorateList(data.list, this.schema)
-                                }
-
-                                exportData("导出数据", data, columns)
-                                this.setState({ exportLoading: false })
-                            })
-                        }}
+                {this.meta.allowImport && (
+                    <Authorized
+                        authority={
+                            this.meta.authority && this.meta.authority.export
+                        }
+                        noMatch={null}
                     >
-                        导出
-                    </Button>
-                </Authorized>
+                        <Button
+                            onClick={() => {
+                                this.setState({ visibleImport: true })
+                            }}
+                        >
+                            导入
+                        </Button>
+                    </Authorized>
+                )}
+                {this.meta.allowExport && (
+                    <Authorized
+                        authority={
+                            this.meta.authority && this.meta.authority.export
+                        }
+                        noMatch={null}
+                    >
+                        <Button
+                            loading={this.state.exportLoading}
+                            onClick={async () => {
+                                this.setState(
+                                    { exportLoading: true },
+                                    async () => {
+                                        const columns = this.getColumns(false)
+                                        let data = this.state.data.list
+                                        if (this.props.exportMore) {
+                                            let data = await this.requestList({
+                                                pageSize: 1000000
+                                            })
+                                            data = decorateList(
+                                                data.list,
+                                                this.schema
+                                            )
+                                        }
+
+                                        if (this.meta.importTemplateUrl) {
+                                            await exportDataByTemplate(
+                                                "导出数据",
+                                                data,
+                                                columns,
+                                                this.meta.importTemplateUrl
+                                            )
+                                        } else {
+                                            exportData(
+                                                "导出数据",
+                                                data,
+                                                columns
+                                            )
+                                        }
+                                        this.setState({ exportLoading: false })
+                                    }
+                                )
+                            }}
+                        >
+                            导出
+                        </Button>
+                    </Authorized>
+                )}
             </Fragment>
         )
     }
+
+    downloadImportTemplate() {}
 
     /**
      * 渲染操作栏
@@ -731,22 +777,22 @@ class DataList extends PureComponent {
         const { form } = this.props
         const renderForm = this.props.renderForm || this.renderForm
         const { resource, title, addArgs } = this.meta
-        const { modalVisible, infoData, action } = this.state
+        const { visibleModal, infoData, action } = this.state
         const updateMethods = {
-            handleModalVisible: this.handleModalVisible.bind(this),
+            handlevisibleModal: this.handlevisibleModal.bind(this),
             handleUpdate: this.handleUpdate.bind(this),
             handleAdd: this.handleAdd.bind(this)
         }
 
         return (
-            modalVisible && (
+            visibleModal && (
                 <InfoModal
                     renderForm={renderForm}
                     title={title}
                     action={action}
                     resource={resource}
                     {...updateMethods}
-                    visible={modalVisible}
+                    visible={visibleModal}
                     values={infoData}
                     addArgs={addArgs}
                     meta={this.meta}
@@ -790,8 +836,20 @@ class DataList extends PureComponent {
         )
     }
 
+    renderImportModal() {
+        return (
+            <ImportModal
+                importTemplateUrl={this.meta.importTemplateUrl}
+                schema={this.schema}
+                onCancel={() => this.setState({ visibleImport: false })}
+            />
+        )
+    }
+
+    renderSearchBar() {}
+
     render() {
-        const { modalVisible } = this.state
+        const { visibleModal, visibleImport } = this.state
         let {
             renderOperationBar,
             renderSearchBar,
@@ -828,7 +886,8 @@ class DataList extends PureComponent {
                         {this.renderList()}
                     </div>
                 </Card>
-                {modalVisible && this.renderInfoModal()}
+                {visibleModal && this.renderInfoModal()}
+                {visibleImport && this.renderImportModal()}
                 {this.renderExtend && this.renderExtend()}
             </Fragment>
         ) : (
