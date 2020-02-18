@@ -12,18 +12,18 @@ import {
     Upload
 } from "antd"
 import isEqual from "lodash.isequal"
-import React, { Fragment, PureComponent } from "react"
-import { createFilter, getListColumn } from "../../utils/component"
+import React, {Fragment, PureComponent} from "react"
+import {createFilter, getListColumn} from "../../utils/component"
 import Authorized from "../Authorized/Authorized"
 import styles from "./DataList.less"
 import InfoModal from "./InfoModal"
 import frSchema from "@/outter/fr-schema/src"
-import { exportData } from "../../utils/xlsx"
+import {exportData} from "../../utils/xlsx"
 import moment from "moment"
 import ImportModal from "@/pages/question/components/ImportModal"
-import { exportDataByTemplate } from "@/outter/fr-schema-antd-utils/src/utils/xlsx"
+import {exportDataByTemplate} from "@/outter/fr-schema-antd-utils/src/utils/xlsx"
 
-const { actions, schemas, decorateList, decorateItem, getPrimaryKey } = frSchema
+const {actions, schemas, decorateList, decorateItem, getPrimaryKey} = frSchema
 const getValue = obj =>
     Object.keys(obj)
         .map(key => obj[key])
@@ -36,6 +36,7 @@ const getValue = obj =>
  *   operateWidth: the operate column width
  *   scroll: table whether can scroll
  *   selectedRows
+ *   showSelect
  *   resource: schema resource name ，
  *   schema: schema name,
  *   service: remote service,
@@ -88,7 +89,7 @@ class DataList extends PureComponent {
      */
     init(props, meta) {
         // 设置meta
-        this.meta = { ...(this.meta || {}), ...meta, ...(props.meta || {}) }
+        this.meta = {...(this.meta || {}), ...meta, ...(props.meta || {})}
         this.refreshMeta()
 
         // 设置 state
@@ -139,8 +140,8 @@ class DataList extends PureComponent {
      * @returns {Array|null}
      */
     getColumns(includeOperation = true) {
-        const { renderOperateColumn } = this.props
-        const { fields } = this.meta
+        const {renderOperateColumn} = this.props
+        const {fields} = this.meta
 
         let columns = getListColumn(this.schema, fields)
 
@@ -151,7 +152,7 @@ class DataList extends PureComponent {
                 : this.renderOperateColumn()
         }
 
-        columns.sort(function(a, b) {
+        columns.sort(function (a, b) {
             return (
                 (a.orderIndex === undefined || a.orderIndex === null
                     ? 9999
@@ -173,8 +174,8 @@ class DataList extends PureComponent {
      */
 
     renderOperateColumn(props = {}) {
-        const { scroll } = this.meta
-        const { showEdit = true, showDelete = true } = props
+        const {scroll} = this.meta
+        const {showEdit = true, showDelete = true} = props
         return (
             !this.meta.readOnly &&
             !this.props.readOnly && {
@@ -212,7 +213,7 @@ class DataList extends PureComponent {
                                 }
                                 noMatch={null}
                             >
-                                <Divider type="vertical" />
+                                <Divider type="vertical"/>
                                 <Popconfirm
                                     title="是否要删除此行？"
                                     onConfirm={async e => {
@@ -234,7 +235,8 @@ class DataList extends PureComponent {
     /**
      * 表格操作列，扩展方法
      */
-    renderOperateColumnExtend(record) {}
+    renderOperateColumnExtend(record) {
+    }
 
     componentWillReceiveProps(nextProps, nextContents) {
         if (nextProps.meta && nextProps.meta !== this.props.meta) {
@@ -276,7 +278,7 @@ class DataList extends PureComponent {
             return
         }
 
-        this.setState({ listLoading: true }, async () => {
+        this.setState({listLoading: true}, async () => {
             let data = await this.requestList()
             let list = decorateList(data.list, this.schema)
             this.convertList && (list = this.convertList(list))
@@ -306,7 +308,7 @@ class DataList extends PureComponent {
      * @returns {Promise<*>}
      */
     async requestList(tempArgs = {}) {
-        const { queryArgs } = this.meta
+        const {queryArgs} = this.meta
 
         const params = {
             ...(queryArgs || {}),
@@ -329,10 +331,10 @@ class DataList extends PureComponent {
     }
 
     handleStandardTableChange = (pagination, filtersArg, sorter) => {
-        const { formValues } = this.state
-        let params = { ...formValues }
+        const {formValues} = this.state
+        let params = {...formValues}
         const filters = Object.keys(filtersArg).reduce((obj, key) => {
-            const newObj = { ...obj }
+            const newObj = {...obj}
             newObj[key] = getValue(filtersArg[key])
             return newObj
         }, {})
@@ -363,7 +365,7 @@ class DataList extends PureComponent {
     }
 
     handleFormReset = () => {
-        const { form } = this.props
+        const {form} = this.props
         form.resetFields()
         this.setState(
             {
@@ -383,7 +385,7 @@ class DataList extends PureComponent {
     handleSearch = e => {
         e.preventDefault()
 
-        const { form } = this.props
+        const {form} = this.props
         form.validateFields((err, fieldsValue) => {
             if (err) return
             const allValues = form.getFieldsValue()
@@ -475,15 +477,15 @@ class DataList extends PureComponent {
         // 修改当前数据
         const idKey = getPrimaryKey(this.schema)
         this.state.data &&
-            this.state.data.list.some((item, index) => {
-                if (data[idKey] == item[idKey]) {
-                    this.state.data.list[index] = decorateItem(
-                        data,
-                        this.schema
-                    )
-                    return true
-                }
-            })
+        this.state.data.list.some((item, index) => {
+            if (data[idKey] == item[idKey]) {
+                this.state.data.list[index] = decorateItem(
+                    data,
+                    this.schema
+                )
+                return true
+            }
+        })
         this.setState({
             data: this.state.data
         })
@@ -506,7 +508,7 @@ class DataList extends PureComponent {
         // 更新
         let response
         if (!this.props.offline) {
-            response = await this.service.delete({ id: data[idKey], ...data })
+            response = await this.service.delete({id: data[idKey], ...data})
         }
 
         const showMessage = (response && response.msg) || "删除成功"
@@ -551,7 +553,7 @@ class DataList extends PureComponent {
         // invoke remote service
         if (!this.props.offline) {
             let args = {}
-            args[idKey + "s"] = valueList.join(",")
+            args[idKey] = "in.(" + valueList.join(",") + ")"
             await this.service.deleteMulti(args)
         }
 
@@ -606,7 +608,7 @@ class DataList extends PureComponent {
                     >
                         <Button
                             onClick={() => {
-                                this.setState({ visibleImport: true })
+                                this.setState({visibleImport: true})
                             }}
                         >
                             导入
@@ -624,7 +626,7 @@ class DataList extends PureComponent {
                             loading={this.state.exportLoading}
                             onClick={async () => {
                                 this.setState(
-                                    { exportLoading: true },
+                                    {exportLoading: true},
                                     async () => {
                                         const columns = this.getColumns(false)
                                         let data = this.state.data.list
@@ -652,7 +654,7 @@ class DataList extends PureComponent {
                                                 columns
                                             )
                                         }
-                                        this.setState({ exportLoading: false })
+                                        this.setState({exportLoading: false})
                                     }
                                 )
                             }}
@@ -665,15 +667,16 @@ class DataList extends PureComponent {
         )
     }
 
-    downloadImportTemplate() {}
+    downloadImportTemplate() {
+    }
 
     /**
      * 渲染操作栏
      * @returns {*}
      */
     renderOperationBar() {
-        const { showSelect } = this.meta
-        const { selectedRows } = this.state
+        const {showSelect} = this.meta
+        const {selectedRows} = this.state
 
         return (
             <div className={styles.tableListOperator}>
@@ -685,8 +688,8 @@ class DataList extends PureComponent {
                     <Col>
                         {this.renderOperationButtons()}
                         {showSelect &&
-                            selectedRows.length > 0 &&
-                            this.renderOperationMulit()}
+                        selectedRows.length > 0 &&
+                        this.renderOperationMulit()}
                     </Col>
                     <Col>{this.renderOperationExtend()}</Col>
                 </Row>
@@ -703,8 +706,8 @@ class DataList extends PureComponent {
                 <Popconfirm
                     title="是否要删除选中的数据？"
                     onConfirm={e => {
-                        const { dispatch } = this.props
-                        const { selectedRows } = this.state
+                        const {dispatch} = this.props
+                        const {selectedRows} = this.state
                         this.handleDeleteMulti(selectedRows)
                     }}
                 >
@@ -717,12 +720,14 @@ class DataList extends PureComponent {
     /**
      * 操作栏扩展
      */
-    renderOperationExtend() {}
+    renderOperationExtend() {
+    }
 
     /**
      * 列表扩展
      */
-    renderExtend() {}
+    renderExtend() {
+    }
 
     /**
      * 渲染表格
@@ -730,9 +735,9 @@ class DataList extends PureComponent {
      * @returns {*}
      */
     renderList = (inProps = {}) => {
-        let { loading } = this.props
-        const { showSelect, scroll, mini } = this.meta
-        const { data, listLoading, selectedRows } = this.state
+        let {loading} = this.props
+        const {showSelect, scroll, mini} = this.meta
+        const {data, listLoading, selectedRows} = this.state
 
         // judge weather hide select
         let otherProps = {}
@@ -774,10 +779,10 @@ class DataList extends PureComponent {
         if (this.props.renderInfoModal) {
             return this.props.renderInfoModal()
         }
-        const { form } = this.props
+        const {form} = this.props
         const renderForm = this.props.renderForm || this.renderForm
-        const { resource, title, addArgs } = this.meta
-        const { visibleModal, infoData, action } = this.state
+        const {resource, title, addArgs} = this.meta
+        const {visibleModal, infoData, action} = this.state
         const updateMethods = {
             handlevisibleModal: this.handlevisibleModal.bind(this),
             handleUpdate: this.handleUpdate.bind(this),
@@ -807,7 +812,7 @@ class DataList extends PureComponent {
 
     componentDidCatch(error, info) {
         // Display fallback UI
-        this.setState({ hasError: true })
+        this.setState({hasError: true})
         console.log("component error", error)
     }
 
@@ -825,7 +830,7 @@ class DataList extends PureComponent {
                             查询
                         </Button>
                         <Button
-                            style={{ marginLeft: 4 }}
+                            style={{marginLeft: 4}}
                             onClick={this.handleFormReset}
                         >
                             重置
@@ -841,15 +846,16 @@ class DataList extends PureComponent {
             <ImportModal
                 importTemplateUrl={this.meta.importTemplateUrl}
                 schema={this.schema}
-                onCancel={() => this.setState({ visibleImport: false })}
+                onCancel={() => this.setState({visibleImport: false})}
             />
         )
     }
 
-    renderSearchBar() {}
+    renderSearchBar() {
+    }
 
     render() {
-        const { visibleModal, visibleImport } = this.state
+        const {visibleModal, visibleImport} = this.state
         let {
             renderOperationBar,
             renderSearchBar,
@@ -874,7 +880,7 @@ class DataList extends PureComponent {
 
         return !this.state.loading ? (
             <Fragment>
-                <Card bordered={false} style={{ width: "100%" }}>
+                <Card bordered={false} style={{width: "100%"}}>
                     <div className={styles.tableListForm}>{searchBar}</div>
                     <div className={styles.tableList}>
                         {this.renderSearchForm && (
@@ -891,7 +897,7 @@ class DataList extends PureComponent {
                 {this.renderExtend && this.renderExtend()}
             </Fragment>
         ) : (
-            <Spin />
+            <Spin/>
         )
     }
 }
