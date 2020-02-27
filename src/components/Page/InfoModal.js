@@ -14,7 +14,7 @@ const confirm = Modal.confirm
  * @param action null, // the action value
  * @param values null, // the record value
  * @param addArgs:null, // 编辑时带上的固有参数
- * @param handleModalVisible: null,
+ * @param handleVisibleModal: null,
  * @param handleUpdate: null,
  * @param service:null,当前使用的service
  * @param schema:null,当前的schema
@@ -185,11 +185,11 @@ export class PureInfoModal extends PureComponent {
      * 关闭弹出框
      */
     closeModel = () => {
-        const { handleModalVisible } = this.props
+        const { handleVisibleModal } = this.props
         this.setState({
             visible: false
         })
-        handleModalVisible && handleModalVisible()
+        handleVisibleModal && handleVisibleModal()
     }
 
     render() {
