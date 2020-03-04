@@ -20,7 +20,7 @@ import InfoModal from "./InfoModal"
 import frSchema from "@/outter/fr-schema/src"
 import {exportData} from "../../utils/xlsx"
 import moment from "moment"
-import ImportModal from "@/pages/question/components/ImportModal"
+import ImportModal from "@/outter/fr-schema-antd-utils/src/components/modal/ImportModal"
 import {exportDataByTemplate} from "@/outter/fr-schema-antd-utils/src/utils/xlsx"
 
 const {actions, schemas, decorateList, decorateItem, getPrimaryKey} = frSchema
