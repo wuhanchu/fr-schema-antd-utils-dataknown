@@ -11,8 +11,8 @@ import {
     Select,
     Tabs,
     Tooltip,
-    Upload,
-    Transfer
+    Transfer,
+    Upload
 } from "antd"
 
 import dictComponents from "./componentDict"
@@ -23,6 +23,7 @@ import { globalStyle } from "../styles/global"
 import moment from "moment"
 import lodash from "lodash"
 
+const _ = lodash
 const SelectOption = Select.Option
 const MentionsOption = Mentions.Option
 
@@ -549,8 +550,12 @@ function selectValueConvert(item, initialValue) {
         item.type === schemaFieldType.MultiSelect &&
         typeof initialValue === "string"
     ) {
-        result = initialValue.split(",")
-        if (typeof Object.values(item.dict)[0].value === "number") {
+        result = initialValue ? initialValue.split(",") : []
+        if (
+            !_.isEmpty(result) &&
+            !_.isEmpty(item.dict) &&
+            typeof Object.values(item.dict)[0].value === "number"
+        ) {
             result = result.map(value => parseInt(value))
         }
     }

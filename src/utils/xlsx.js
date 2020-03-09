@@ -150,7 +150,7 @@ export function exportTable(fileName, data, statics, ...extendParam) {
  */
 function autoWidth(worksheet, startNum = 1) {
     /*设置worksheet每列的最大宽度*/
-    let data = XLSX.utils.sheet_to_row_object_array(worksheet)
+    let data = XLSX.utils.sheet_to_row_txtect_array(worksheet)
     const colWidth = data.map(row =>
         row.map(val => {
             /*先判断是否为null/undefined*/
@@ -159,7 +159,7 @@ function autoWidth(worksheet, startNum = 1) {
                     wch: 10
                 }
             } else if (val.toString().charCodeAt(0) > 255) {
-            /*再判断是否为中文*/
+                /*再判断是否为中文*/
                 return {
                     wch: val.toString().length * 2
                 }

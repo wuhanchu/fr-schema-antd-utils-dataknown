@@ -1,8 +1,8 @@
-import React, {Fragment} from "react"
-import {Spin, Modal, Spoin, Icon, Row, Col, Typography} from "antd"
+import React, { Fragment } from "react"
+import { Spin, Modal, Spoin, Icon, Row, Col, Typography } from "antd"
 
-const LoadingModal = function (props) {
-    const {width = 120, tip} = props
+const LoadingModal = function(props) {
+    const { width = 120, tip } = props
     return (
         <Modal
             visible={true}
@@ -12,12 +12,14 @@ const LoadingModal = function (props) {
             footer={null}
             width={width}
         >
-            <Spin
-                tip={tip}
-            >
-                <div style={{
-                    width: "100%", height: "100%", margin: 12
-                }}></div>
+            <Spin tip={tip}>
+                <div
+                    style={{
+                        width: "100%",
+                        height: "100%",
+                        margin: 12
+                    }}
+                ></div>
             </Spin>
         </Modal>
     )

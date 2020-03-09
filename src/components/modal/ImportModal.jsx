@@ -116,10 +116,7 @@ class ImportModal extends PureComponent {
                         label={"上传文件"}
                         required={true}
                     >
-                        {form.getFieldDecorator(
-                            "file",
-                            {}
-                        )(
+                        {form.getFieldDecorator("file", {})(
                             <Upload
                                 fileList={this.state.fileList}
                                 {...uploadProps}
