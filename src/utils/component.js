@@ -187,7 +187,7 @@ export function createInput(
 
     // 是否有定制方法
     form && delete props.defaultValue
-    let tempData = null
+    let tempData = data
     if (item.type === schemaFieldType.Transfer) {
         tempData = data[item.dataIndex]
     }
