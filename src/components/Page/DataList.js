@@ -186,7 +186,7 @@ class DataList extends PureComponent {
                             >
                                 <a
                                     onClick={() =>
-                                        this.handleModalVisible(
+                                        this.handleVisibleModal(
                                             true,
                                             record,
                                             actions.edit
@@ -418,7 +418,7 @@ class DataList extends PureComponent {
      * @param record
      * @param action
      */
-    handleModalVisible = (flag, record, action) => {
+    handleVisibleModal = (flag, record, action) => {
         this.setState({
             modalVisible: !!flag,
             infoData: record,
@@ -446,7 +446,7 @@ class DataList extends PureComponent {
 
         this.refreshList()
         message.success("添加成功")
-        this.handleModalVisible()
+        this.handleVisibleModal()
         this.handleChangeCallback && this.handleChangeCallback()
         this.props.handleChangeCallback && this.props.handleChangeCallback()
 
@@ -483,7 +483,7 @@ class DataList extends PureComponent {
         this.refreshList()
         message.success("修改成功")
 
-        this.handleModalVisible()
+        this.handleVisibleModal()
         this.handleChangeCallback && this.handleChangeCallback()
         this.props.handleChangeCallback && this.props.handleChangeCallback()
 
@@ -517,7 +517,7 @@ class DataList extends PureComponent {
         })
         this.refreshList()
         message.success(showMessage)
-        this.handleModalVisible()
+        this.handleVisibleModal()
         this.handleChangeCallback && this.handleChangeCallback()
         this.props.handleChangeCallback && this.props.handleChangeCallback()
 
@@ -583,7 +583,7 @@ class DataList extends PureComponent {
                         <Button
                             type="primary"
                             onClick={() =>
-                                this.handleModalVisible(true, null, actions.add)
+                                this.handleVisibleModal(true, null, actions.add)
                             }
                         >
                             新增
@@ -733,7 +733,7 @@ class DataList extends PureComponent {
         const { resource, title, addArgs } = this.meta
         const { modalVisible, infoData, action } = this.state
         const updateMethods = {
-            handleModalVisible: this.handleModalVisible.bind(this),
+            handleVisibleModal: this.handleVisibleModal.bind(this),
             handleUpdate: this.handleUpdate.bind(this),
             handleAdd: this.handleAdd.bind(this)
         }
