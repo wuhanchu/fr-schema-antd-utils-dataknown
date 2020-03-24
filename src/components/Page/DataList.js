@@ -1,15 +1,5 @@
 import StandardTable from "../StandardTable"
-import {
-    Button,
-    Card,
-    Col,
-    Divider,
-    message,
-    Popconfirm,
-    Row,
-    Form,
-    Spin
-} from "antd"
+import { Button, Card, Col, Divider, Form, message, Popconfirm, Row, Spin } from "antd"
 import isEqual from "lodash.isequal"
 import React, { Fragment, PureComponent } from "react"
 import { createFilter, getListColumn } from "../../utils/component"
@@ -18,7 +8,6 @@ import styles from "./DataList.less"
 import InfoModal from "./InfoModal"
 import frSchema from "@/outter/fr-schema/src"
 import { exportData } from "../../utils/xlsx"
-import moment from "moment"
 
 const { actions, schemas, decorateList, decorateItem, getPrimaryKey } = frSchema
 const getValue = obj =>
@@ -145,7 +134,7 @@ class DataList extends PureComponent {
                 : this.renderOperateColumn()
         }
 
-        columns.sort(function(a, b) {
+        columns.sort(function (a, b) {
             return (
                 (a.orderIndex === undefined || a.orderIndex === null
                     ? 9999
@@ -205,7 +194,7 @@ class DataList extends PureComponent {
                                 }
                                 noMatch={null}
                             >
-                                <Divider type="vertical" />
+                                <Divider type="vertical"/>
                                 <Popconfirm
                                     title="是否要删除此行？"
                                     onConfirm={e => {
@@ -227,7 +216,8 @@ class DataList extends PureComponent {
     /**
      * 表格操作列，扩展方法
      */
-    renderOperateColumnExtend(record) {}
+    renderOperateColumnExtend(record) {
+    }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.meta && nextProps.meta !== this.props.meta) {
@@ -333,7 +323,7 @@ class DataList extends PureComponent {
 
         if (sorter.field) {
             params.sort = `${
-                sorter.order == "ascend" ? "" : "-"
+                sorter.order == "ascend"? "" : "-"
             }${sorter.field.replace("_remark", "")}`
         }
 
@@ -420,7 +410,7 @@ class DataList extends PureComponent {
      */
     handleVisibleModal = (flag, record, action) => {
         this.setState({
-            modalVisible: !!flag,
+            visibleModal: !!flag,
             infoData: record,
             action
         })
@@ -458,25 +448,25 @@ class DataList extends PureComponent {
      * @param data
      * @returns {Promise<void>}
      */
-    handleUpdate = async (data, schema) => {
+    handleUpdate = async (data, schema, method = "patch") => {
         // 更新
         let response
         if (!this.props.offline) {
-            response = await this.service.patch(data, schema)
+            response = await this.service[method](data, schema)
         }
 
         // 修改当前数据
         const idKey = getPrimaryKey(this.schema)
         this.state.data &&
-            this.state.data.list.some((item, index) => {
-                if (data[idKey] == item[idKey]) {
-                    this.state.data.list[index] = decorateItem(
-                        data,
-                        this.schema
-                    )
-                    return true
-                }
-            })
+        this.state.data.list.some((item, index) => {
+            if (data[idKey] == item[idKey]) {
+                this.state.data.list[index] = decorateItem(
+                    data,
+                    this.schema
+                )
+                return true
+            }
+        })
         this.setState({
             data: this.state.data
         })
@@ -639,8 +629,8 @@ class DataList extends PureComponent {
                     <Col>
                         {this.renderOperationButtons()}
                         {showSelect &&
-                            selectedRows.length > 0 &&
-                            this.renderOperationMulit()}
+                        selectedRows.length > 0 &&
+                        this.renderOperationMulit()}
                     </Col>
                     <Col>{this.renderOperationExtend()}</Col>
                 </Row>
@@ -671,12 +661,14 @@ class DataList extends PureComponent {
     /**
      * 操作栏扩展
      */
-    renderOperationExtend() {}
+    renderOperationExtend() {
+    }
 
     /**
      * 列表扩展
      */
-    renderExtend() {}
+    renderExtend() {
+    }
 
     /**
      * 渲染表格
@@ -731,7 +723,7 @@ class DataList extends PureComponent {
         const { form } = this.props
         const renderForm = this.props.renderForm || this.renderForm
         const { resource, title, addArgs } = this.meta
-        const { modalVisible, infoData, action } = this.state
+        const { visibleModal, infoData, action } = this.state
         const updateMethods = {
             handleVisibleModal: this.handleVisibleModal.bind(this),
             handleUpdate: this.handleUpdate.bind(this),
@@ -739,14 +731,14 @@ class DataList extends PureComponent {
         }
 
         return (
-            modalVisible && (
+            visibleModal && (
                 <InfoModal
                     renderForm={renderForm}
                     title={title}
                     action={action}
                     resource={resource}
                     {...updateMethods}
-                    visible={modalVisible}
+                    visible={visibleModal}
                     values={infoData}
                     addArgs={addArgs}
                     meta={this.meta}
@@ -791,7 +783,7 @@ class DataList extends PureComponent {
     }
 
     render() {
-        const { modalVisible } = this.state
+        const { visibleModal } = this.state
         let {
             renderOperationBar,
             renderSearchBar,
@@ -814,7 +806,7 @@ class DataList extends PureComponent {
             searchBar = this.renderSearchBar && this.renderSearchBar()
         }
 
-        return !this.state.loading ? (
+        return !this.state.loading? (
             <Fragment>
                 <Card bordered={false} style={{ width: "100%" }}>
                     <div className={styles.tableListForm}>{searchBar}</div>
@@ -828,11 +820,11 @@ class DataList extends PureComponent {
                         {this.renderList()}
                     </div>
                 </Card>
-                {modalVisible && this.renderInfoModal()}
+                {visibleModal && this.renderInfoModal()}
                 {this.renderExtend && this.renderExtend()}
             </Fragment>
         ) : (
-            <Spin />
+            <Spin/>
         )
     }
 }
