@@ -291,16 +291,29 @@ class DataList extends PureComponent {
     async requestList(tempArgs = {}) {
         const { queryArgs } = this.meta
 
+        let searchParams = this.getSearchParam()
+
         const params = {
             ...(queryArgs || {}),
-            ...(this.state.formValues || {}),
+            ...searchParams,
             ...(this.state.pagination || {}),
             ...tempArgs
         }
-        let data = await this.service.get(params)
 
+        let data = await this.service.get(params)
         data = this.dataConvert(data)
         return data
+    }
+
+    /**
+     * get current search param
+     */
+    getSearchParam() {
+        let searchParams = {}
+        this.state.formValues && Object.keys(this.state.formValues).forEach(key => {
+            searchParams[key] = (this.schema[key] && this.schema[key].searchPrefix || "") + this.state.formValues[key]
+        })
+        return searchParams
     }
 
     /**
@@ -369,6 +382,7 @@ class DataList extends PureComponent {
         const { form } = this.props
         form.validateFields((err, fieldsValue) => {
             if (err) return
+
             const allValues = form.getFieldsValue()
             const values = {
                 ...allValues,
@@ -457,6 +471,7 @@ class DataList extends PureComponent {
 
         // 修改当前数据
         const idKey = getPrimaryKey(this.schema)
+
         this.state.data &&
         this.state.data.list.some((item, index) => {
             if (data[idKey] == item[idKey]) {
@@ -467,12 +482,15 @@ class DataList extends PureComponent {
                 return true
             }
         })
+
+        //
         this.setState({
             data: this.state.data
         })
         this.refreshList()
         message.success("修改成功")
 
+        //
         this.handleVisibleModal()
         this.handleChangeCallback && this.handleChangeCallback()
         this.props.handleChangeCallback && this.props.handleChangeCallback()
