@@ -335,9 +335,9 @@ class DataList extends PureComponent {
         Object.assign(params, filters)
 
         if (sorter.field) {
-            params.sort = `${
-                sorter.order == "ascend"? "" : "-"
-            }${sorter.field.replace("_remark", "")}`
+            params.order = `${sorter.field.replace("_remark", "")}${
+                sorter.order == "ascend"? ".asc" : ".desc"
+            }`
         }
 
         this.setState(
