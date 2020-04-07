@@ -147,6 +147,7 @@ class DataList extends PureComponent {
 
         operationBar && columns.push(operationBar)
         this.columns = columns
+        console.debug("this.columns", this.columns)
         return this.columns
     }
 
@@ -162,6 +163,7 @@ class DataList extends PureComponent {
             !this.meta.readOnly &&
             !this.props.readOnly && {
                 title: "操作",
+                key: "operation",
                 fixed: scroll && "right",
                 render: (text, record) => (
                     <Fragment>
