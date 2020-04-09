@@ -126,7 +126,7 @@ class DataList extends PureComponent {
         if (this.meta.authorityKey) {
             this.meta.authority = {
                 add: this.meta.authorityKey + "_post",
-                update: this.meta.authorityKey + "_put",
+                update: this.meta.authorityKey + "_patch",
                 delete: this.meta.authorityKey + "_delete",
                 export: this.meta.authorityKey + "_get",
                 show: this.meta.authorityKey + "_get_by_id"
