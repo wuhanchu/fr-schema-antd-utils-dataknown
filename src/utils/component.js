@@ -1,19 +1,5 @@
 import React, { Fragment } from "react"
-import {
-    Avatar,
-    Button,
-    Col,
-    Divider,
-    Form,
-    Icon,
-    Mentions,
-    Row,
-    Select,
-    Tabs,
-    Tooltip,
-    Transfer,
-    Upload
-} from "antd"
+import { Avatar, Button, Col, Divider, Form, Icon, Mentions, Row, Select, Tabs, Tooltip, Transfer, Upload } from "antd"
 
 import dictComponents from "./componentDict"
 import frSchema from "@/outter/fr-schema/src"
@@ -111,7 +97,7 @@ function fieldToColumn(key, item) {
             (value => {
                 switch (item.type) {
                     case "Avatar":
-                        return <Avatar src={value} />
+                        return <Avatar src={value}/>
                     default:
                         return (
                             <div
@@ -161,16 +147,16 @@ export function createInput(
         disabled:
             action === actions.show ||
             (action === actions.edit && item.readOnly),
-        onChange: function(event) {
+        onChange: function (event) {
             const value =
-                event && event.currentTarget ? event.currentTarget.value : event
+                event && event.currentTarget? event.currentTarget.value : event
             if (this && this.state && this.setState && this.state.data) {
                 let data = { ...this.state.data }
                 data[item.dataIndex] = value
                 this.setState({ data })
             }
             item.onChange &&
-                item.onChange.bind(this)(value, this && this.state, form)
+            item.onChange.bind(this)(value, this && this.state, form)
         }.bind(this),
         ...item.props
     }
@@ -180,7 +166,7 @@ export function createInput(
     let decoratorProps = {}
 
     let defaultWidth =
-        (globalStyle.form.input.width * (colNum > 3 ? 3 : colNum)) / colNum
+        (globalStyle.form.input.width*(colNum > 3? 3 : colNum))/colNum
 
     // initialValue
     let initialValue = data && data[item.dataIndex]
@@ -194,7 +180,7 @@ export function createInput(
 
     let tempProps = {
         style: item.style || { width: defaultWidth },
-        placeholder: !props.readOnly ? `请输入${item.title}` : null,
+        placeholder: !props.readOnly? `请输入${item.title}` : null,
         ...props
     }
     if (!form) {
@@ -258,15 +244,15 @@ export function createInput(
     //  delete the defaultValue
     // component.props && (delete component.props.defaultValue)
     return !this ||
-        !this.state ||
-        !item.infoShowFunc ||
-        item.infoShowFunc(this.state.data) ? (
+    !this.state ||
+    !item.infoShowFunc ||
+    item.infoShowFunc(this.state.data)? (
         <Tooltip placement="right" title={item.tip}>
             <div>
                 <FormItem
                     key={item.dataIndex}
                     label={
-                        item.title + (item.unit ? "(" + item.unit + ")" : "")
+                        item.title + (item.unit? "(" + item.unit + ")" : "")
                     }
                     extra={item.extra}
                     {...itemProps}
@@ -274,9 +260,9 @@ export function createInput(
                 >
                     {form
                         ? form.getFieldDecorator(
-                              item.dataIndex,
-                              decoratorProps
-                          )(component)
+                            item.dataIndex,
+                            decoratorProps
+                        )(component)
                         : component}
                 </FormItem>
             </div>
@@ -346,59 +332,59 @@ export function createComponent(
 
             // options
             item.dict &&
-                Object.values(item.dict).forEach(
-                    function(dictItem) {
-                        //check the dict Whether it matches
-                        if (
-                            dictItem.condition &&
-                            (action === actions.add || action === actions.edit)
-                        ) {
-                            if (dictItem.condition instanceof Function) {
-                                if (!dictItem.condition(this.state.data)) {
-                                    return
-                                }
-                            } else if (
-                                Object.keys(dictItem.condition).some(
-                                    function(key) {
-                                        return (
-                                            !this ||
-                                            !this.state ||
-                                            !this.state.data ||
-                                            this.state.data[key] !==
-                                                dictItem.condition[key]
-                                        )
-                                    }.bind(this)
-                                )
-                            ) {
+            Object.values(item.dict).forEach(
+                function (dictItem) {
+                    //check the dict Whether it matches
+                    if (
+                        dictItem.condition &&
+                        (action === actions.add || action === actions.edit)
+                    ) {
+                        if (dictItem.condition instanceof Function) {
+                            if (!dictItem.condition(this.state.data)) {
                                 return
                             }
+                        } else if (
+                            Object.keys(dictItem.condition).some(
+                                function (key) {
+                                    return (
+                                        !this ||
+                                        !this.state ||
+                                        !this.state.data ||
+                                        this.state.data[key] !==
+                                        dictItem.condition[key]
+                                    )
+                                }.bind(this)
+                            )
+                        ) {
+                            return
                         }
+                    }
 
-                        // add to options
-                        return options.push(
-                            <SelectOption
-                                key={dictItem.value}
-                                title={dictItem.title}
-                                value={dictItem.value}
-                            >
-                                {dictItem.remark}
-                            </SelectOption>
-                        )
-                    }.bind(this)
-                )
+                    // add to options
+                    return options.push(
+                        <SelectOption
+                            key={dictItem.value}
+                            title={dictItem.title}
+                            value={dictItem.value}
+                        >
+                            {dictItem.remark}
+                        </SelectOption>
+                    )
+                }.bind(this)
+            )
 
             // judge whether show search
             const searchOptions =
                 options.length > 10
                     ? {
-                          showSearch: true,
-                          optionFilterProp: "children",
-                          filterOption: (input, option) =>
-                              option.props.children.toLowerCase &&
-                              option.props.children
-                                  .toLowerCase()
-                                  .indexOf(input.toLowerCase()) >= 0
-                      }
+                        showSearch: true,
+                        optionFilterProp: "children",
+                        filterOption: (input, option) =>
+                            option.props.children.toLowerCase &&
+                            option.props.children
+                                .toLowerCase()
+                                .indexOf(input.toLowerCase()) >= 0
+                    }
                     : {}
 
             // create the select
@@ -423,19 +409,19 @@ export function createComponent(
         case dictComponents.Mentions:
             // options
             item.options &&
-                Object.values(item.options).forEach(
-                    function(dictItem) {
-                        // add to options
-                        return options.push(
-                            <MentionsOption
-                                key={dictItem.value}
-                                value={dictItem.value}
-                            >
-                                {dictItem.remark}
-                            </MentionsOption>
-                        )
-                    }.bind(this)
-                )
+            Object.values(item.options).forEach(
+                function (dictItem) {
+                    // add to options
+                    return options.push(
+                        <MentionsOption
+                            key={dictItem.value}
+                            value={dictItem.value}
+                        >
+                            {dictItem.remark}
+                        </MentionsOption>
+                    )
+                }.bind(this)
+            )
 
             // create the components
             component = (
@@ -456,7 +442,7 @@ export function createComponent(
                     {...props}
                 >
                     <Button>
-                        <Icon type="upload" /> 选择文件
+                        <Icon type="upload"/> 选择文件
                     </Button>
                 </Upload>
             )
@@ -509,12 +495,12 @@ function getItemDefaultValue(item) {
     if (item.type == schemaFieldType.MultiSelect) {
         let defaultValue = []
         item.dict &&
-            Object.values(item.dict).forEach(dictItem => {
-                if (dictItem.default) {
-                    defaultValue = defaultValue || []
-                    defaultValue.push(dictItem.value)
-                }
-            })
+        Object.values(item.dict).forEach(dictItem => {
+            if (dictItem.default) {
+                defaultValue = defaultValue || []
+                defaultValue.push(dictItem.value)
+            }
+        })
 
         return defaultValue || []
     }
@@ -522,13 +508,13 @@ function getItemDefaultValue(item) {
     else if (item.type == schemaFieldType.Select) {
         let defaultValue = null
         item.dict &&
-            Object.values(item.dict).some(dictItem => {
-                // 在from下的默认值由 form 来传入
-                if (dictItem.default) {
-                    defaultValue = dictItem.value
-                    return true
-                }
-            })
+        Object.values(item.dict).some(dictItem => {
+            // 在from下的默认值由 form 来传入
+            if (dictItem.default) {
+                defaultValue = dictItem.value
+                return true
+            }
+        })
 
         return defaultValue
     }
@@ -550,7 +536,7 @@ function selectValueConvert(item, initialValue) {
         item.type === schemaFieldType.MultiSelect &&
         typeof initialValue === "string"
     ) {
-        result = initialValue ? initialValue.split(",") : []
+        result = initialValue? initialValue.split(",") : []
         if (
             !_.isEmpty(result) &&
             !_.isEmpty(item.dict) &&
@@ -570,6 +556,8 @@ function selectValueConvert(item, initialValue) {
             typeof initialValue === "string"
         ) {
             result = parseInt(initialValue)
+        } else if (initialValue instanceof Array) {
+            result = initialValue
         } else if (typeof Object.values(item.dict)[0].value === "string") {
             result = initialValue.toString()
         }
@@ -594,9 +582,9 @@ export function createFilter(form, inSchema, span, data = {}) {
         }
 
         schema[key].dict &&
-            Object.keys(schema[key].dict).forEach(dictItem => {
-                delete schema[key].dict[dictItem].default
-            })
+        Object.keys(schema[key].dict).forEach(dictItem => {
+            delete schema[key].dict[dictItem].default
+        })
     })
 
     const filter = Object.keys(schema).map(key => {
@@ -648,7 +636,7 @@ export function createForm(
     // create the from
     column.forEach(item => {
         if (!result) {
-            result = item.tabKey ? {} : []
+            result = item.tabKey? {} : []
         }
 
         // 修改隐藏 只读
@@ -690,13 +678,13 @@ export function createForm(
                     <TabPane tab={listKey} key={listKey}>
                         {result[listKey].length < 10
                             ? renderInputList.bind(this)(
-                                  result[listKey],
-                                  colNum
-                              )
+                                result[listKey],
+                                colNum
+                            )
                             : renderInputList.bind(this)(
-                                  result[listKey],
-                                  colNum
-                              )}
+                                result[listKey],
+                                colNum
+                            )}
                         {extend[listKey] || null}
                     </TabPane>
                 ))}
@@ -752,7 +740,7 @@ function renderInputList(list, colNum) {
                     {tempList.map((tempItem, tempIndex) => (
                         <Col
                             key={`tempList_${index}_${tempIndex}}`}
-                            span={(24 / colNum) * (tempItem.column.colNum || 1)}
+                            span={(24/colNum)*(tempItem.column.colNum || 1)}
                         >
                             {tempItem.component}
                         </Col>
@@ -767,7 +755,7 @@ function renderInputList(list, colNum) {
         if (push) {
             itemList.push(
                 <Fragment>
-                    <Divider style={{ margin: "5px 2px 5px 2px" }} />
+                    <Divider style={{ margin: "5px 2px 5px 2px" }}/>
                     <div className={styles.title}>
                         {list[index + 1].column.groupName}
                     </div>

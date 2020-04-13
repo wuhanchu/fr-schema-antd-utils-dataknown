@@ -103,7 +103,7 @@ class ImportModal extends PureComponent {
                     >
                         <Button
                             onClick={event => {
-                                FileSaver(importTemplateUrl, "导出模板")
+                                FileSaver(importTemplateUrl, "导入模板")
                             }}
                         >
                             下载
