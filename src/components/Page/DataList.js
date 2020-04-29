@@ -554,7 +554,7 @@ class DataList extends PureComponent {
         // invoke remote service
         if (!this.props.offline) {
             let args = {}
-            args[idKey + "s"] = valueList.join(",")
+            args[idKey] = "in.(" + valueList.join(",") + ")"
             await this.service.deleteMulti(args)
         }
 
