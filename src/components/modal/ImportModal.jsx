@@ -2,7 +2,10 @@ import React, { PureComponent } from "react"
 import { connect } from "dva"
 import { globalStyle } from "@/styles/global"
 
-import { Button, Form, Icon, message, Modal, Upload } from "antd"
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+
+import { Button, message, Modal, Upload } from "antd";
 import FileSaver from "file-saver"
 
 import XLSX from "xlsx"

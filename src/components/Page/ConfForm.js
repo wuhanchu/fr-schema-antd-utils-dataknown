@@ -1,5 +1,7 @@
 import React, { PureComponent } from "react"
-import { Button, Form } from "antd"
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Button } from "antd";
 import InfoForm from "./InfoForm"
 import { connect } from "dva"
 

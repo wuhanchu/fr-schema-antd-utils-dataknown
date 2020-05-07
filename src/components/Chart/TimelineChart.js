@@ -1,15 +1,7 @@
 import StandardTable from "../StandardTable"
-import {
-    Button,
-    Card,
-    Col,
-    Divider,
-    message,
-    Popconfirm,
-    Row,
-    Form,
-    Spin
-} from "antd"
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Button, Card, Col, Divider, message, Popconfirm, Row, Spin } from "antd";
 import isEqual from "lodash.isequal"
 import React, { Fragment, PureComponent } from "react"
 import { createFilter, getListColumn } from "../../utils/component"

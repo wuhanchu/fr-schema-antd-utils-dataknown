@@ -1,5 +1,7 @@
 import React, { PureComponent } from "react"
-import { Form, message, Modal, Skeleton, Spin } from "antd"
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { message, Modal, Skeleton, Spin } from "antd";
 import InfoForm from "./InfoForm"
 import frSchema from "@/outter/fr-schema/src"
 

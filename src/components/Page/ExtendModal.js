@@ -1,5 +1,7 @@
 import React, { PureComponent } from "react"
-import { Form, Modal, Tabs } from "antd"
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import { Modal, Tabs } from "antd";
 import { createForm, createInput } from "../../utils/component"
 
 const TabPane = Tabs.TabPane

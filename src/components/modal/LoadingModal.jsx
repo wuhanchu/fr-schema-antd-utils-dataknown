@@ -1,5 +1,5 @@
 import React, { Fragment } from "react"
-import { Spin, Modal, Spoin, Icon, Row, Col, Typography } from "antd"
+import { Spin, Modal, Spoin, Row, Col, Typography } from "antd";
 
 const LoadingModal = function(props) {
     const { width = 120, tip } = props

@@ -1,5 +1,20 @@
 import React, { Fragment } from "react"
-import { Avatar, Button, Col, Divider, Form, Icon, Mentions, Row, Select, Tabs, Tooltip, Transfer, Upload } from "antd"
+import { UploadOutlined } from '@ant-design/icons';
+import { Form } from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {
+    Avatar,
+    Button,
+    Col,
+    Divider,
+    Mentions,
+    Row,
+    Select,
+    Tabs,
+    Tooltip,
+    Transfer,
+    Upload,
+} from "antd";
 
 import dictComponents from "./componentDict"
 import frSchema from "@/outter/fr-schema/src"
@@ -442,7 +457,7 @@ export function createComponent(
                     {...props}
                 >
                     <Button>
-                        <Icon type="upload"/> 选择文件
+                        <UploadOutlined /> 选择文件
                     </Button>
                 </Upload>
             )
