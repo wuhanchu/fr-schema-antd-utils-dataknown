@@ -16,7 +16,7 @@ export function createBaseModel(services, refreshList = true) {
         },
 
         effects: {
-            *fetch({ payload }, { call, put, select }) {
+            * fetch({ payload }, { call, put, select }) {
                 // get  the user
                 const { currentUser } = yield select(state => state.user)
                 const { token } = (currentUser && currentUser.user) || {}
@@ -30,7 +30,7 @@ export function createBaseModel(services, refreshList = true) {
                 })
             },
 
-            *add({ payload, callback }, { call, put }) {
+            * add({ payload, callback }, { call, put }) {
                 const response = yield call(services.post, payload)
                 yield put({
                     type: "save",
@@ -40,13 +40,13 @@ export function createBaseModel(services, refreshList = true) {
                 })
                 if (callback) callback()
                 refreshList &&
-                    (yield put({
-                        type: "fetch"
-                    }))
+                (yield put({
+                    type: "fetch"
+                }))
 
                 message.success("新增成功")
             },
-            *remove({ payload, callback }, { call, put }) {
+            * remove({ payload, callback }, { call, put }) {
                 yield call(services.delete, payload)
                 yield put({
                     type: "save",
@@ -56,12 +56,12 @@ export function createBaseModel(services, refreshList = true) {
                 })
                 if (callback) callback()
                 refreshList &&
-                    (yield put({
-                        type: "fetch"
-                    }))
+                (yield put({
+                    type: "fetch"
+                }))
                 message.success("删除成功")
             },
-            *update({ payload, callback }, { call, put }) {
+            * update({ payload, callback }, { call, put }) {
                 const response = yield call(services.put, payload)
                 yield put({
                     type: "save",
@@ -72,9 +72,9 @@ export function createBaseModel(services, refreshList = true) {
 
                 if (callback) callback()
                 refreshList &&
-                    (yield put({
-                        type: "fetch"
-                    }))
+                (yield put({
+                    type: "fetch"
+                }))
                 message.success("修改成功")
             }
         },

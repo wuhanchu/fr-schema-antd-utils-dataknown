@@ -44,7 +44,7 @@ const checkPermissions = (authority, currentAuthority, target, Exception) => {
 
     if (authority instanceof Promise) {
         return (
-            <PromiseRender ok={target} error={Exception} promise={authority} />
+            <PromiseRender ok={target} error={Exception} promise={authority}/>
         )
     } // Function 处理
 

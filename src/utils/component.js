@@ -457,7 +457,7 @@ export function createComponent(
                     {...props}
                 >
                     <Button>
-                        <UploadOutlined /> 选择文件
+                        <UploadOutlined/> 选择文件
                     </Button>
                 </Upload>
             )

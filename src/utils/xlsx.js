@@ -110,7 +110,7 @@ export function exportTable(fileName, data, statics, ...extendParam) {
 
     sheet = XLSX.utils.json_to_sheet(statics)
     XLSX.utils.sheet_add_json(sheet, ef, {
-        origin: "A" + statics ? statics.length + 2 : 1
+        origin: "A" + statics? statics.length + 2 : 1
     })
 
     // show convert
@@ -127,8 +127,8 @@ export function exportTable(fileName, data, statics, ...extendParam) {
         Object.keys(item).forEach(key => {
             const sonItem = item[key]
             length[key] =
-                sonItem && sonItem.toString().length * 1.3 > (length[key] || 10)
-                    ? sonItem.toString().length * 1.3
+                sonItem && sonItem.toString().length*1.3 > (length[key] || 10)
+                    ? sonItem.toString().length*1.3
                     : length[key] || 10
         })
     })
@@ -161,7 +161,7 @@ function autoWidth(worksheet, startNum = 1) {
             } else if (val.toString().charCodeAt(0) > 255) {
                 /*再判断是否为中文*/
                 return {
-                    wch: val.toString().length * 2
+                    wch: val.toString().length*2
                 }
             } else {
                 return {

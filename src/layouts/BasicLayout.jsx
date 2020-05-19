@@ -6,7 +6,6 @@
 import ProLayout, { DefaultFooter } from '@ant-design/pro-layout';
 import React, { useEffect } from 'react';
 import { Link, useIntl, connect } from 'umi';
-import { GithubOutlined } from '@ant-design/icons';
 import { Result, Button } from 'antd';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
@@ -55,11 +54,11 @@ const BasicLayout = props => {
      */
 
     useEffect(() => {
-        // if (dispatch) {
-        //     dispatch({
-        //         type: 'user/fetchCurrent',
-        //     });
-        // }
+        if (dispatch) {
+            // dispatch({
+            //     type: 'user/fetchCurrent',
+            // });
+        }
     }, []);
     /**
      * init variables

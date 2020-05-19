@@ -84,7 +84,7 @@ export class PureInfoModal extends PureComponent {
         this.setState({ loadingSubmit: true })
         form.validateFields(async (err, fieldsValue) => {
             try {
-                let param = addArgs ? { ...addArgs } : {}
+                let param = addArgs? { ...addArgs } : {}
                 const idKey = getPrimaryKey(this.schema)
 
                 // set the id value
@@ -105,7 +105,7 @@ export class PureInfoModal extends PureComponent {
                     console.log("err", Object.values(err))
                     message.error(
                         "信息填写错误！" +
-                            Object.values(err)[0].errors[0].message
+                        Object.values(err)[0].errors[0].message
                     )
                     return
                 }
@@ -132,13 +132,13 @@ export class PureInfoModal extends PureComponent {
     renderForm() {
         const { values } = this.state
         return this.props.renderForm &&
-            typeof this.props.renderForm == "function" ? (
+        typeof this.props.renderForm == "function"? (
             this.props.renderForm({
                 ...this.props,
                 values
             })
         ) : (
-            <InfoForm {...this.props} values={values} />
+            <InfoForm {...this.props} values={values}/>
         )
     }
 
@@ -227,8 +227,8 @@ export class PureInfoModal extends PureComponent {
                     otherProps.onCancel && otherProps.onCancel()
                 }}
             >
-                {this.state.loadingFetch ? (
-                    <Skeleton />
+                {this.state.loadingFetch? (
+                    <Skeleton/>
                 ) : (
                     <Spin spinning={loadingSubmit}>{this.renderForm()}</Spin>
                 )}

@@ -31,19 +31,19 @@ const InfoCard = ({ title, value, schema, contentStyle = {} }) => {
                 }}
             >
                 {value &&
-                    Object.keys(schema).map(key => {
-                        const item = schema[key]
-                        return (
-                            <Fragment key={key}>
-                                <Text>{`${item.title} : ${
-                                    showData[key]
-                                        ? showData[key].toString()
-                                        : ""
-                                }`}</Text>
-                                <br />
-                            </Fragment>
-                        )
-                    })}
+                Object.keys(schema).map(key => {
+                    const item = schema[key]
+                    return (
+                        <Fragment key={key}>
+                            <Text>{`${item.title} : ${
+                                showData[key]
+                                    ? showData[key].toString()
+                                    : ""
+                            }`}</Text>
+                            <br/>
+                        </Fragment>
+                    )
+                })}
             </div>
         </Card>
     )

@@ -4,12 +4,12 @@ import nzh from "nzh/cn"
 import { parse, stringify } from "qs"
 
 export function fixedZero(val) {
-    return val * 1 < 10 ? `0${val}` : val
+    return val*1 < 10? `0${val}` : val
 }
 
 export function getTimeDistance(type) {
     const now = new Date()
-    const oneDay = 1000 * 60 * 60 * 24
+    const oneDay = 1000*60*60*24
 
     if (type === "today") {
         now.setHours(0)
@@ -30,9 +30,9 @@ export function getTimeDistance(type) {
             day -= 1
         }
 
-        const beginTime = now.getTime() - day * oneDay
+        const beginTime = now.getTime() - day*oneDay
 
-        return [moment(beginTime), moment(beginTime + (7 * oneDay - 1000))]
+        return [moment(beginTime), moment(beginTime + (7*oneDay - 1000))]
     }
 
     if (type === "month") {
@@ -159,12 +159,12 @@ export function isUrl(path) {
 }
 
 export function formatWan(val) {
-    const v = val * 1
+    const v = val*1
     if (!v || Number.isNaN(v)) return ""
 
     let result = val
     if (val > 10000) {
-        result = Math.floor(val / 10000)
+        result = Math.floor(val/10000)
         result = (
             <span>
                 {result}

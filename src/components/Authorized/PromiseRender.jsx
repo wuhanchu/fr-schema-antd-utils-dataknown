@@ -59,7 +59,7 @@ export default class PromiseRender extends React.Component {
     render() {
         const { component: Component } = this.state
         const { ok, error, promise, ...rest } = this.props
-        return Component ? (
+        return Component? (
             <Component {...rest} />
         ) : (
             <div
@@ -71,7 +71,7 @@ export default class PromiseRender extends React.Component {
                     textAlign: "center"
                 }}
             >
-                <Spin size="large" />
+                <Spin size="large"/>
             </div>
         )
     }

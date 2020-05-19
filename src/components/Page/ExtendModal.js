@@ -31,7 +31,7 @@ class ExtendForm extends PureComponent {
         const { data } = this.props
 
         form.validateFields((err, fieldsValue) => {
-            let param = this.state.data ? { ...this.state.data } : {}
+            let param = this.state.data? { ...this.state.data } : {}
             Object.keys(fieldsValue).forEach(key => {
                 param[key] =
                     fieldsValue[key] instanceof Array

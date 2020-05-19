@@ -143,7 +143,7 @@ class DataList extends PureComponent {
                 : this.renderOperateColumn()
         }
 
-        columns.sort(function(a, b) {
+        columns.sort(function (a, b) {
             return (
                 (a.orderIndex === undefined || a.orderIndex === null
                     ? 9999
@@ -204,7 +204,7 @@ class DataList extends PureComponent {
                                 }
                                 noMatch={null}
                             >
-                                <Divider type="vertical" />
+                                <Divider type="vertical"/>
                                 <Popconfirm
                                     title="是否要删除此行？"
                                     onConfirm={async e => {
@@ -226,7 +226,8 @@ class DataList extends PureComponent {
     /**
      * 表格操作列，扩展方法
      */
-    renderOperateColumnExtend(record) {}
+    renderOperateColumnExtend(record) {
+    }
 
     componentWillReceiveProps(nextProps, nextContents) {
         if (nextProps.meta && nextProps.meta !== this.props.meta) {
@@ -332,7 +333,7 @@ class DataList extends PureComponent {
 
         if (sorter.field) {
             params.order = `${sorter.field.replace("_remark", "")}${
-                sorter.order == "ascend" ? ".asc" : ".desc"
+                sorter.order == "ascend"? ".asc" : ".desc"
             }`
         }
 
@@ -467,15 +468,15 @@ class DataList extends PureComponent {
         // 修改当前数据
         const idKey = getPrimaryKey(this.schema)
         this.state.data &&
-            this.state.data.list.some((item, index) => {
-                if (data[idKey] == item[idKey]) {
-                    this.state.data.list[index] = decorateItem(
-                        data,
-                        this.schema
-                    )
-                    return true
-                }
-            })
+        this.state.data.list.some((item, index) => {
+            if (data[idKey] == item[idKey]) {
+                this.state.data.list[index] = decorateItem(
+                    data,
+                    this.schema
+                )
+                return true
+            }
+        })
         this.setState({
             data: this.state.data
         })
@@ -657,7 +658,8 @@ class DataList extends PureComponent {
         )
     }
 
-    downloadImportTemplate() {}
+    downloadImportTemplate() {
+    }
 
     /**
      * 渲染操作栏
@@ -677,8 +679,8 @@ class DataList extends PureComponent {
                     <Col>
                         {this.renderOperationButtons()}
                         {showSelect &&
-                            selectedRows.length > 0 &&
-                            this.renderOperationMulit()}
+                        selectedRows.length > 0 &&
+                        this.renderOperationMulit()}
                     </Col>
                     <Col>{this.renderOperationExtend()}</Col>
                 </Row>
@@ -709,12 +711,14 @@ class DataList extends PureComponent {
     /**
      * 操作栏扩展
      */
-    renderOperationExtend() {}
+    renderOperationExtend() {
+    }
 
     /**
      * 列表扩展
      */
-    renderExtend() {}
+    renderExtend() {
+    }
 
     /**
      * 渲染表格
@@ -838,7 +842,8 @@ class DataList extends PureComponent {
         )
     }
 
-    renderSearchBar() {}
+    renderSearchBar() {
+    }
 
     render() {
         const { visibleModal, visibleImport } = this.state
@@ -864,7 +869,7 @@ class DataList extends PureComponent {
             searchBar = this.renderSearchBar && this.renderSearchBar()
         }
 
-        return !this.state.loading ? (
+        return !this.state.loading? (
             <Fragment>
                 <Card bordered={false} style={{ width: "100%" }}>
                     <div className={styles.tableListForm}>{searchBar}</div>
@@ -883,7 +888,7 @@ class DataList extends PureComponent {
                 {this.renderExtend && this.renderExtend()}
             </Fragment>
         ) : (
-            <Spin />
+            <Spin/>
         )
     }
 }
