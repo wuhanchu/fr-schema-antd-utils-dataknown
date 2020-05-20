@@ -77,6 +77,8 @@ const BasicLayout = props => {
         authority: undefined,
     };
     const { formatMessage } = useIntl();
+    console.debug("props",props)
+    console.debug("settings",settings)
     return (
         <ProLayout
             logo={logo}
@@ -103,7 +105,8 @@ const BasicLayout = props => {
                     }),
                 },
                 ...routers,
-            ]}
+            ]}te
+
             itemRender={(route, params, routes, paths) => {
                 const first = routes.indexOf(route) === 0;
                 return first? (
@@ -114,13 +117,12 @@ const BasicLayout = props => {
             }}
             footerRender={() => defaultFooterDom}
             menuDataRender={menuDataRender}
-            rightContentRender={() => <RightContent/>}
             {...props}
             {...settings}
+            loading={false}
+
         >
-            <Authorized authority={authorized.authority} noMatch={noMatch}>
-                {children}
-            </Authorized>
+            {children}
         </ProLayout>
     );
 };

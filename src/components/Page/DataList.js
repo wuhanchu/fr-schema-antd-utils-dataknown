@@ -45,9 +45,10 @@ class DataList extends PureComponent {
             list: [],
             pagination: {}
         },
+        loading: false,
         listLoading: true,
         visibleModal: false,
-        updatevisibleModal: false,
+        updateVisibleModal: false,
         expandForm: false,
         selectedRows: [],
         formValues: {},
@@ -91,7 +92,7 @@ class DataList extends PureComponent {
             },
             listLoading: true,
             visibleModal: false,
-            updatevisibleModal: false,
+            updateVisibleModal: false,
             expandForm: false,
             selectedRows: [],
             formValues: {},
@@ -869,27 +870,23 @@ class DataList extends PureComponent {
             searchBar = this.renderSearchBar && this.renderSearchBar()
         }
 
-        return !this.state.loading? (
-            <Fragment>
-                <Card bordered={false} style={{ width: "100%" }}>
-                    <div className={styles.tableListForm}>{searchBar}</div>
-                    <div className={styles.tableList}>
-                        {this.renderSearchForm && (
-                            <div className={styles.tableListForm}>
-                                {this.renderSearchForm()}
-                            </div>
-                        )}
-                        {operationBar}
-                        {this.renderList()}
-                    </div>
-                </Card>
-                {visibleModal && this.renderInfoModal()}
-                {visibleImport && this.renderImportModal()}
-                {this.renderExtend && this.renderExtend()}
-            </Fragment>
-        ) : (
-            <Spin/>
-        )
+        return  <Fragment>
+            <Card bordered={false} style={{ width: "100%" }}>
+                <div className={styles.tableListForm}>{searchBar}</div>
+                <div className={styles.tableList}>
+                    {this.renderSearchForm && (
+                        <div className={styles.tableListForm}>
+                            {this.renderSearchForm()}
+                        </div>
+                    )}
+                    {operationBar}
+                    {this.renderList()}
+                </div>
+            </Card>
+            {visibleModal && this.renderInfoModal()}
+            {visibleImport && this.renderImportModal()}
+            {this.renderExtend && this.renderExtend()}
+        </Fragment>
     }
 }
 
