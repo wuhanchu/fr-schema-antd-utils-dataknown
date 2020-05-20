@@ -82,7 +82,7 @@ const BasicLayout = props => {
             logo={logo}
             formatMessage={formatMessage}
             menuHeaderRender={(logoDom, titleDom) => (
-                <Link to={BASE_PATH + "/"}>
+                <Link to={"/"}>
                     {logoDom}
                     {titleDom}
                 </Link>
