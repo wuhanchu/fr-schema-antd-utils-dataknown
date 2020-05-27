@@ -117,12 +117,15 @@ const BasicLayout = props => {
             }}
             footerRender={() => defaultFooterDom}
             menuDataRender={menuDataRender}
+            rightContentRender={() => <RightContent/>}
             {...props}
             {...settings}
             loading={false}
 
         >
-            {children}
+            <Authorized authority={authorized.authority} noMatch={noMatch}>
+                {children}
+            </Authorized>
         </ProLayout>
     );
 };
