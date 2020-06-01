@@ -17,8 +17,13 @@ class ListPage extends DataList {
         this.meta = { ...(this.meta || {}), ...this.props.meta }
     }
 
+    renderDataList() {
+        return super.render()
+    }
+
     render() {
-        const { title, content, tabList, tabDefaultActiveKey } = this.meta
+        const { title, content, tabList, onTabChange } = this.meta
+        const { tabActiveKey } = this.state
 
         return (
             <PageHeaderWrapper
@@ -28,9 +33,10 @@ class ListPage extends DataList {
                     (this.renderHeaderContent && this.renderHeaderContent())
                 }
                 tabList={tabList}
-                tabActiveKey={tabDefaultActiveKey}
+                onTabChange={onTabChange}
+                tabActiveKey={tabActiveKey}
             >
-                {super.render()}
+                {this.renderDataList()}
             </PageHeaderWrapper>
         )
     }

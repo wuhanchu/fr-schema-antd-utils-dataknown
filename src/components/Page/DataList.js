@@ -726,7 +726,7 @@ class DataList extends PureComponent {
      * @param inProps
      * @returns {*}
      */
-    renderList = (inProps = {}) => {
+    renderList(inProps = {}) {
         let { loading } = this.props
         const { showSelect, scroll, mini } = this.meta
         const { data, listLoading, selectedRows } = this.state
@@ -845,6 +845,8 @@ class DataList extends PureComponent {
 
     renderSearchBar() {
     }
+
+
 
     render() {
         const { visibleModal, visibleImport } = this.state
