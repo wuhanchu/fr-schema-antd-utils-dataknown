@@ -51,7 +51,7 @@ class DataList extends PureComponent {
         updateVisibleModal: false,
         expandForm: false,
         selectedRows: [],
-        formValues: {},
+        searchValues: {},
         infoData: {}
     }
     schema = {}
@@ -95,7 +95,7 @@ class DataList extends PureComponent {
             updateVisibleModal: false,
             expandForm: false,
             selectedRows: [],
-            formValues: {},
+            searchValues: {},
             infoData: {}
         }
 
@@ -239,7 +239,7 @@ class DataList extends PureComponent {
             this.setState(
                 {
                     pagination: null,
-                    formValues: {}
+                    searchValues: {}
                 },
                 () => {
                     this.refreshList()
@@ -304,7 +304,7 @@ class DataList extends PureComponent {
 
         const params = {
             ...(queryArgs || {}),
-            ...(this.state.formValues || {}),
+            ...(this.state.searchValues || {}),
             ...(this.state.pagination || {}),
             ...tempArgs
         }
@@ -323,13 +323,14 @@ class DataList extends PureComponent {
     }
 
     handleStandardTableChange = (pagination, filtersArg, sorter) => {
-        const { formValues } = this.state
-        let params = { ...formValues }
+        const { searchValues } = this.state
+        let params = { ...searchValues }
         const filters = Object.keys(filtersArg).reduce((obj, key) => {
             const newObj = { ...obj }
             newObj[key] = getValue(filtersArg[key])
             return newObj
         }, {})
+
         Object.assign(params, filters)
 
         if (sorter.field) {
@@ -344,7 +345,7 @@ class DataList extends PureComponent {
                     currentPage: pagination.current,
                     pageSize: pagination.pageSize
                 },
-                formValues: params
+                searchValues: params
             },
             () => this.refreshList()
         )
@@ -358,11 +359,12 @@ class DataList extends PureComponent {
 
     handleFormReset = () => {
         const { form } = this.props
+        const { order } = this.props
         form.resetFields()
         this.setState(
             {
                 pagination: null,
-                formValues: {}
+                searchValues: { order }
             },
             () => {
                 this.refreshList()
@@ -388,23 +390,23 @@ class DataList extends PureComponent {
             }
 
             this.setState({
-                formValues: values
+                searchValues: values
             })
 
-            // refresh the list
-            const formValues = {}
+            //  更新列表
+            const searchValues = { ...this.state.searchValues }
             Object.keys(values).forEach(key => {
                 if (!values[key]) {
                     return
                 }
 
-                formValues[key] = values[key]
+                searchValues[key] = values[key]
             })
 
             this.setState(
                 {
                     pagination: null,
-                    formValues
+                    searchValues
                 },
                 async () => {
                     this.refreshList()
@@ -846,8 +848,6 @@ class DataList extends PureComponent {
     renderSearchBar() {
     }
 
-
-
     render() {
         const { visibleModal, visibleImport } = this.state
         let {
@@ -872,7 +872,7 @@ class DataList extends PureComponent {
             searchBar = this.renderSearchBar && this.renderSearchBar()
         }
 
-        return  <Fragment>
+        return <Fragment>
             <Card bordered={false} style={{ width: "100%" }}>
                 <div className={styles.tableListForm}>{searchBar}</div>
                 <div className={styles.tableList}>
