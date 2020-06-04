@@ -333,7 +333,7 @@ class DataList extends PureComponent {
      * @param data
      */
     dataConvert(data) {
-        return <data></data>
+        return data
     }
 
     handleStandardTableChange = (pagination, filtersArg, sorter) => {
