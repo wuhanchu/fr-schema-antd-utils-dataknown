@@ -32,7 +32,7 @@ const getValue = obj =>
  *   schema: schema name,
  *   service: remote service,
  *   title: page title,
- *   infoProps: infoForm propsrefreshMeta
+ *   infoProps: infoForm props refreshMeta
  *   handleChangeCallback: data change call back
  *   queryArgs: fixed query args
  *   allowExport
@@ -111,9 +111,9 @@ class DataList extends PureComponent {
      */
     refreshMeta() {
         this.schema =
-            this.props.schema || this.meta.schema || schemas[this.meta.resource]
+            this.props.schema || this.meta.schema || (schemas && schemas[this.meta.resource])
         this.service = this.meta.service || this.service
-        this.meta.idKey = frSchema.getPrimaryKey(this.schema)
+        this.meta.idKey = this.schema && frSchema.getPrimaryKey(this.schema)
 
         if (this.meta.authorityKey) {
             this.meta.authority = {
@@ -318,12 +318,13 @@ class DataList extends PureComponent {
     }
 
     /**
-     * get current search param
+     * 获取当前的查询参数
      */
     getSearchParam() {
         let searchParams = {}
         this.state.searchValues && Object.keys(this.state.searchValues).forEach(key => {
-            !_.isNil(this.state.searchValues[key]) && (searchParams[key] = (this.schema[key] && this.schema[key].searchPrefix || "") + this.state.searchValues[key])
+            const value = this.state.searchValues[key] instanceof Array? "[" + this.state.searchValues[key].map(item => typeof item === "number"? item : "\"" + item + "\"").join(",") + "]" : this.state.searchValues[key]
+            !_.isNil(this.state.searchValues[key]) && (searchParams[key] = (this.schema[key] && this.schema[key].searchPrefix || "") + value)
         })
         return searchParams
     }
@@ -868,6 +869,8 @@ class DataList extends PureComponent {
     }
 
     render() {
+
+
         const { visibleModal, visibleImport } = this.state
         let {
             renderOperationBar,
@@ -888,7 +891,7 @@ class DataList extends PureComponent {
         if (renderSearchBar) {
             searchBar = renderSearchBar()
         } else if (renderSearchBar !== null) {
-            searchBar = this.renderSearchBar && this.renderSearchBar()
+            searchBar =  this.renderSearchBar && this.renderSearchBar()
         }
 
         return <Fragment>
