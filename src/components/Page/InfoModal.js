@@ -174,7 +174,7 @@ export class PureInfoModal extends PureComponent {
                     this.closeModel()
                 },
                 onCancel: () => {
-                    return
+
                 }
             })
             return false
@@ -192,6 +192,7 @@ export class PureInfoModal extends PureComponent {
             visible: false
         })
         handleVisibleModal && handleVisibleModal()
+        this.props.onCancel && this.props.onCancel()
     }
 
     render() {
