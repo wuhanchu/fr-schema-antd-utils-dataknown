@@ -1,24 +1,24 @@
-import StandardTable from "../StandardTable"
+import StandardTable from '../StandardTable';
 import { Form } from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
-import { Button, Card, Col, Divider, message, Popconfirm, Row } from "antd";
-import isEqual from "lodash.isequal"
-import React, { Fragment, PureComponent } from "react"
-import { createFilter, getListColumn } from "../../utils/component"
-import Authorized from "../Authorized/Authorized"
-import styles from "./DataList.less"
-import InfoModal from "./InfoModal"
-import frSchema from "@/outter/fr-schema/src"
-import { exportData } from "../../utils/xlsx"
-import ImportModal from "@/outter/fr-schema-antd-utils/src/components/modal/ImportModal"
-import { exportDataByTemplate } from "@/outter/fr-schema-antd-utils/src/utils/xlsx"
-import * as _ from "lodash"
+import { Button, Card, Col, Divider, message, Popconfirm, Row } from 'antd';
+import isEqual from 'lodash.isequal';
+import React, { Fragment, PureComponent } from 'react';
+import { createFilter, getListColumn } from '../../utils/component';
+import Authorized from '../Authorized/Authorized';
+import styles from './DataList.less';
+import InfoModal from './InfoModal';
+import frSchema from '@/outter/fr-schema/src';
+import { exportData } from '../../utils/xlsx';
+import ImportModal from '@/outter/fr-schema-antd-utils/src/components/modal/ImportModal';
+import { exportDataByTemplate } from '@/outter/fr-schema-antd-utils/src/utils/xlsx';
+import * as _ from 'lodash';
 
-const { actions, schemas, decorateList, decorateItem, getPrimaryKey } = frSchema
+const { actions, schemas, decorateList, decorateItem, getPrimaryKey } = frSchema;
 const getValue = obj =>
     Object.keys(obj)
         .map(key => obj[key])
-        .join(",")
+        .join(',');
 
 /**
  *
@@ -43,7 +43,7 @@ class DataList extends PureComponent {
     state = {
         data: {
             list: [],
-            pagination: {}
+            pagination: {},
         },
         loading: false,
         listLoading: true,
@@ -52,13 +52,13 @@ class DataList extends PureComponent {
         expandForm: false,
         selectedRows: [],
         searchValues: {},
-        infoData: {}
-    }
-    schema = {}
+        infoData: {},
+    };
+    schema = {};
 
     constructor(props, meta) {
-        super(props)
-        this.init(props, meta)
+        super(props);
+        this.init(props, meta);
     }
 
     /**
@@ -66,12 +66,12 @@ class DataList extends PureComponent {
      * @param params
      */
     createFilters(inSchema, span = 6) {
-        return createFilter(this.props.form, inSchema, span)
+        return createFilter(this.props.form, inSchema, span);
     }
 
     async componentDidMount() {
-        await this.refreshList()
-        this._ismounted = true
+        await this.refreshList();
+        this._ismounted = true;
     }
 
     /**
@@ -81,14 +81,14 @@ class DataList extends PureComponent {
      */
     init(props, meta) {
         // 设置meta
-        this.meta = { ...(this.meta || {}), ...meta, ...(props.meta || {}) }
-        this.refreshMeta()
+        this.meta = { ...(this.meta || {}), ...meta, ...(props.meta || {}) };
+        this.refreshMeta();
 
         // 设置 state
         const tempState = {
             data: {
                 list: props.value || [],
-                pagination: {}
+                pagination: {},
             },
             listLoading: true,
             visibleModal: false,
@@ -96,13 +96,13 @@ class DataList extends PureComponent {
             expandForm: false,
             selectedRows: [],
             searchValues: {},
-            infoData: {}
-        }
+            infoData: {},
+        };
 
         if (this._ismounted) {
-            this.setState(tempState)
+            this.setState(tempState);
         } else {
-            this.state = tempState
+            this.state = tempState;
         }
     }
 
@@ -111,18 +111,18 @@ class DataList extends PureComponent {
      */
     refreshMeta() {
         this.schema =
-            this.props.schema || this.meta.schema || (schemas && schemas[this.meta.resource])
-        this.service = this.meta.service || this.service
-        this.meta.idKey = this.schema && frSchema.getPrimaryKey(this.schema)
+            this.props.schema || this.meta.schema || (schemas && schemas[this.meta.resource]);
+        this.service = this.meta.service || this.service;
+        this.meta.idKey = this.schema && frSchema.getPrimaryKey(this.schema);
 
         if (this.meta.authorityKey) {
             this.meta.authority = {
-                add: this.meta.authorityKey + "_post",
-                update: this.meta.authorityKey + "_patch",
-                delete: this.meta.authorityKey + "_delete",
-                export: this.meta.authorityKey + "_export",
-                show: this.meta.authorityKey + "_get_by_id"
-            }
+                add: this.meta.authorityKey + '_post',
+                update: this.meta.authorityKey + '_patch',
+                delete: this.meta.authorityKey + '_delete',
+                export: this.meta.authorityKey + '_export',
+                show: this.meta.authorityKey + '_get_by_id',
+            };
         }
     }
 
@@ -132,19 +132,19 @@ class DataList extends PureComponent {
      * @returns {Array|null}
      */
     getColumns(includeOperation = true) {
-        const { renderOperateColumn } = this.props
-        const { fields } = this.meta
+        const { renderOperateColumn } = this.props;
+        const { fields } = this.meta;
 
-        let columns = getListColumn(this.schema, fields)
+        let columns = getListColumn(this.schema, fields);
 
-        let operationBar = null
+        let operationBar = null;
         if (renderOperateColumn !== null && includeOperation) {
             operationBar = renderOperateColumn
                 ? renderOperateColumn.bind(this)()
-                : this.renderOperateColumn()
+                : this.renderOperateColumn();
         }
 
-        columns.sort(function (a, b) {
+        columns.sort(function(a, b) {
             return (
                 (a.orderIndex === undefined || a.orderIndex === null
                     ? 9999
@@ -152,13 +152,13 @@ class DataList extends PureComponent {
                 (b.orderIndex === undefined || b.orderIndex === null
                     ? 9999
                     : b.orderIndex)
-            )
-        })
+            );
+        });
 
-        operationBar && columns.push(operationBar)
-        this.columns = columns
-        console.debug("this.columns", this.columns)
-        return this.columns
+        operationBar && columns.push(operationBar);
+        this.columns = columns;
+        console.debug('this.columns', this.columns);
+        return this.columns;
     }
 
     /**
@@ -167,14 +167,14 @@ class DataList extends PureComponent {
      */
 
     renderOperateColumn(props = {}) {
-        const { scroll } = this.meta
-        const { showEdit = true, showDelete = true } = props
+        const { scroll } = this.meta;
+        const { showEdit = true, showDelete = true } = props;
         return (
             !this.meta.readOnly &&
             !this.props.readOnly && {
-                title: "操作",
+                title: '操作',
                 width: this.meta.operateWidth,
-                fixed: scroll && "right",
+                fixed: scroll && 'right',
                 render: (text, record) => (
                     <Fragment>
                         {showEdit && (
@@ -190,7 +190,7 @@ class DataList extends PureComponent {
                                         this.handleVisibleModal(
                                             true,
                                             record,
-                                            actions.edit
+                                            actions.edit,
                                         )
                                     }
                                 >
@@ -210,8 +210,8 @@ class DataList extends PureComponent {
                                 <Popconfirm
                                     title="是否要删除此行？"
                                     onConfirm={async e => {
-                                        await this.handleDelete(record)
-                                        e.stopPropagation()
+                                        await this.handleDelete(record);
+                                        e.stopPropagation();
                                     }}
                                 >
                                     <a>删除</a>
@@ -220,9 +220,9 @@ class DataList extends PureComponent {
                         )}
                         {this.renderOperateColumnExtend(record)}
                     </Fragment>
-                )
+                ),
             }
-        )
+        );
     }
 
     /**
@@ -233,25 +233,25 @@ class DataList extends PureComponent {
 
     componentWillReceiveProps(nextProps, nextContents) {
         if (nextProps.meta && nextProps.meta !== this.props.meta) {
-            console.log("DataList ")
-            this.meta = nextProps.meta
-            this.columns = null
-            this.refreshMeta()
+            console.log('DataList ');
+            this.meta = nextProps.meta;
+            this.columns = null;
+            this.refreshMeta();
             this.setState(
                 {
                     pagination: null,
-                    searchValues: {}
+                    searchValues: {},
                 },
                 () => {
-                    this.refreshList()
-                }
-            )
+                    this.refreshList();
+                },
+            );
         }
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevState.data !== this.state.data) {
-            this.props.onChange && this.props.onChange(this.state.data.list)
+            this.props.onChange && this.props.onChange(this.state.data.list);
         }
     }
 
@@ -263,28 +263,28 @@ class DataList extends PureComponent {
                     list:
                         decorateList(
                             this.state.data && this.state.data.list,
-                            this.schema
-                        ) || []
+                            this.schema,
+                        ) || [],
                 },
-                listLoading: false
-            })
-            return
+                listLoading: false,
+            });
+            return;
         }
 
         this.setState({ listLoading: true }, async () => {
-            let data = await this.requestList()
-            let list = decorateList(data.list, this.schema)
-            this.convertList && (list = this.convertList(list))
+            let data = await this.requestList();
+            let list = decorateList(data.list, this.schema);
+            this.convertList && (list = this.convertList(list));
 
             this.setState({
                 selectedRows: [],
                 data: {
                     ...data,
-                    list
+                    list,
                 },
-                listLoading: false
-            })
-        })
+                listLoading: false,
+            });
+        });
     }
 
     /**
@@ -293,7 +293,7 @@ class DataList extends PureComponent {
      * @returns {*}
      */
     convertList(list) {
-        return list
+        return list;
     }
 
     /**
@@ -301,32 +301,32 @@ class DataList extends PureComponent {
      * @returns {Promise<*>}
      */
     async requestList(tempArgs = {}) {
-        const { queryArgs } = this.meta
+        const { queryArgs } = this.meta;
 
-        let searchParams = this.getSearchParam()
+        let searchParams = this.getSearchParam();
 
         const params = {
             ...(queryArgs || {}),
             ...searchParams,
             ...(this.state.pagination || {}),
-            ...tempArgs
-        }
+            ...tempArgs,
+        };
 
-        let data = await this.service.get(params)
-        data = this.dataConvert(data)
-        return data
+        let data = await this.service.get(params);
+        data = this.dataConvert(data);
+        return data;
     }
 
     /**
      * 获取当前的查询参数
      */
     getSearchParam() {
-        let searchParams = {}
+        let searchParams = {};
         this.state.searchValues && Object.keys(this.state.searchValues).forEach(key => {
-            const value = this.state.searchValues[key] instanceof Array? "[" + this.state.searchValues[key].map(item => typeof item === "number"? item : "\"" + item + "\"").join(",") + "]" : this.state.searchValues[key]
-            !_.isNil(this.state.searchValues[key]) && (searchParams[key] = (this.schema[key] && this.schema[key].searchPrefix || "") + value)
-        })
-        return searchParams
+            const value = this.state.searchValues[key] instanceof Array? '[' + this.state.searchValues[key].map(item => typeof item === 'number'? item : '"' + item + '"').join(',') + ']' : this.state.searchValues[key];
+            !_.isNil(this.state.searchValues[key]) && (searchParams[key] = (this.schema[key] && this.schema[key].searchPrefix || '') + value);
+        });
+        return searchParams;
     }
 
     /**
@@ -334,102 +334,102 @@ class DataList extends PureComponent {
      * @param data
      */
     dataConvert(data) {
-        return data
+        return data;
     }
 
     handleStandardTableChange = (pagination, filtersArg, sorter) => {
-        const { searchValues } = this.state
-        let params = { ...searchValues }
+        const { searchValues } = this.state;
+        let params = { ...searchValues };
         const filters = Object.keys(filtersArg).reduce((obj, key) => {
-            const newObj = { ...obj }
-            newObj[key] = getValue(filtersArg[key])
-            return newObj
-        }, {})
+            const newObj = { ...obj };
+            newObj[key] = getValue(filtersArg[key]);
+            return newObj;
+        }, {});
 
-        Object.assign(params, filters)
+        Object.assign(params, filters);
 
         if (sorter.field) {
-            params.order = `${sorter.field.replace("_remark", "")}${
-                sorter.order == "ascend"? ".asc" : ".desc"
-            }`
+            params.order = `${sorter.field.replace('_remark', '')}${
+                sorter.order == 'ascend'? '.asc' : '.desc'
+            }`;
         }
 
         this.setState(
             {
                 pagination: {
                     currentPage: pagination.current,
-                    pageSize: pagination.pageSize
+                    pageSize: pagination.pageSize,
                 },
-                searchValues: params
+                searchValues: params,
             },
-            () => this.refreshList()
-        )
-    }
+            () => this.refreshList(),
+        );
+    };
 
     handleSelectRows = rows => {
         this.setState({
-            selectedRows: rows
-        })
-    }
+            selectedRows: rows,
+        });
+    };
 
     handleFormReset = () => {
-        const { form } = this.props
-        const { order } = this.props
-        form.resetFields()
+        const { form } = this.props;
+        const { order } = this.props;
+        form.resetFields();
         this.setState(
             {
                 pagination: null,
-                searchValues: { order }
+                searchValues: { order },
             },
             () => {
-                this.refreshList()
-            }
-        )
-    }
+                this.refreshList();
+            },
+        );
+    };
 
     /**
      * 处理搜索触发事件
      * @param e
      */
     handleSearch = e => {
-        e.preventDefault()
+        e.preventDefault();
 
-        const { form } = this.props
+        const { form } = this.props;
         form.validateFields((err, fieldsValue) => {
-            if (err) return
+            if (err) return;
 
-            const allValues = form.getFieldsValue()
+            const allValues = form.getFieldsValue();
             const values = {
                 ...allValues,
                 updatedAt:
-                    fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf()
-            }
+                    fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
+            };
 
             this.setState({
-                searchValues: values
-            })
+                searchValues: values,
+            });
 
             //  更新列表
-            const searchValues = { ...this.state.searchValues }
+            const searchValues = { ...this.state.searchValues };
             Object.keys(values).forEach(key => {
                 if (!values[key]) {
-                    return
+                    return;
                 }
 
-                searchValues[key] = values[key]
-            })
+                searchValues[key] = values[key];
+            });
 
             this.setState(
                 {
                     pagination: null,
-                    searchValues
+                    searchValues,
                 },
                 async () => {
-                    this.refreshList()
-                }
-            )
-        })
-    }
+                    this.refreshList();
+                },
+            );
+        });
+    };
 
     /**
      * 信息界面展示
@@ -441,9 +441,9 @@ class DataList extends PureComponent {
         this.setState({
             visibleModal: !!flag,
             infoData: record,
-            action
-        })
-    }
+            action,
+        });
+    };
 
     /**
      * 处理数据新增
@@ -452,24 +452,24 @@ class DataList extends PureComponent {
      */
     async handleAdd(data, schema) {
         // 更新
-        let response
+        let response;
         if (!this.props.offline) {
-            response = await this.service.post(data, schema)
+            response = await this.service.post(data, schema);
         } else {
             // 修改当前数据
-            this.state.data.list.push(decorateItem(data, this.schema))
+            this.state.data.list.push(decorateItem(data, this.schema));
             this.setState({
-                data: this.state.data
-            })
+                data: this.state.data,
+            });
         }
 
-        this.refreshList()
-        message.success("添加成功")
-        this.handleVisibleModal()
-        this.handleChangeCallback && this.handleChangeCallback()
-        this.props.handleChangeCallback && this.props.handleChangeCallback()
+        this.refreshList();
+        message.success('添加成功');
+        this.handleVisibleModal();
+        this.handleChangeCallback && this.handleChangeCallback();
+        this.props.handleChangeCallback && this.props.handleChangeCallback();
 
-        return response
+        return response;
     }
 
     /**
@@ -477,41 +477,41 @@ class DataList extends PureComponent {
      * @param data
      * @returns {Promise<void>}
      */
-    handleUpdate = async (data, schema, method = "patch") => {
+    handleUpdate = async (data, schema, method = 'patch') => {
         // 更新
-        let response
+        let response;
         if (!this.props.offline) {
-            response = await this.service[method](data, schema)
+            response = await this.service[method](data, schema);
         }
 
         // 修改当前数据
-        const idKey = getPrimaryKey(this.schema)
+        const idKey = getPrimaryKey(this.schema);
 
         this.state.data &&
         this.state.data.list.some((item, index) => {
             if (data[idKey] == item[idKey]) {
                 this.state.data.list[index] = decorateItem(
                     data,
-                    this.schema
-                )
-                return true
+                    this.schema,
+                );
+                return true;
             }
-        })
+        });
 
         //
         this.setState({
-            data: this.state.data
-        })
-        this.refreshList()
-        message.success("修改成功")
+            data: this.state.data,
+        });
+        this.refreshList();
+        message.success('修改成功');
 
         //
-        this.handleVisibleModal()
-        this.handleChangeCallback && this.handleChangeCallback()
-        this.props.handleChangeCallback && this.props.handleChangeCallback()
+        this.handleVisibleModal();
+        this.handleChangeCallback && this.handleChangeCallback();
+        this.props.handleChangeCallback && this.props.handleChangeCallback();
 
-        return response
-    }
+        return response;
+    };
 
     /**
      * 处理数据删除
@@ -520,63 +520,63 @@ class DataList extends PureComponent {
      */
     handleDelete = async data => {
         // 更新
-        let response
+        let response;
         if (!this.props.offline) {
-            response = await this.service.delete({ id: data[idKey], ...data })
+            response = await this.service.delete({ id: data[idKey], ...data });
         }
 
-        const showMessage = (response && response.msg) || "删除成功"
+        const showMessage = (response && response.msg) || '删除成功';
 
         // 修改当前数据
-        const idKey = getPrimaryKey(this.schema)
+        const idKey = getPrimaryKey(this.schema);
         this.state.data.list.some((item, index) => {
             if (data[idKey] == item[idKey]) {
-                this.state.data.list.splice(index, 1)
-                return true
+                this.state.data.list.splice(index, 1);
+                return true;
             }
-        })
+        });
         this.setState({
-            data: this.state.data
-        })
-        this.refreshList()
-        message.success(showMessage)
-        this.handleVisibleModal()
-        this.handleChangeCallback && this.handleChangeCallback()
-        this.props.handleChangeCallback && this.props.handleChangeCallback()
+            data: this.state.data,
+        });
+        this.refreshList();
+        message.success(showMessage);
+        this.handleVisibleModal();
+        this.handleChangeCallback && this.handleChangeCallback();
+        this.props.handleChangeCallback && this.props.handleChangeCallback();
 
-        return response
-    }
+        return response;
+    };
 
     /**
      * multi delete data
      */
     handleDeleteMulti = async recordList => {
         // change current data
-        const idKey = getPrimaryKey(this.schema)
-        const valueList = recordList.map(record => record[idKey])
+        const idKey = getPrimaryKey(this.schema);
+        const valueList = recordList.map(record => record[idKey]);
 
         this.state.data.list.forEach((item, index) => {
             if (valueList.indexOf(item[idKey]) >= 0) {
-                this.state.data.list.splice(index, 1)
+                this.state.data.list.splice(index, 1);
             }
-        })
+        });
         this.setState({
-            data: this.state.data
-        })
+            data: this.state.data,
+        });
 
         // invoke remote service
         if (!this.props.offline) {
-            let args = {}
-            args[idKey] = "in.(" + valueList.join(",") + ")"
-            await this.service.deleteMulti(args)
+            let args = {};
+            args[idKey] = 'in.(' + valueList.join(',') + ')';
+            await this.service.deleteMulti(args);
         }
 
         //  refresh current data
-        this.refreshList()
-        message.success("删除成功")
-        this.handleChangeCallback && this.handleChangeCallback()
-        this.props.handleChangeCallback && this.props.handleChangeCallback()
-    }
+        this.refreshList();
+        message.success('删除成功');
+        this.handleChangeCallback && this.handleChangeCallback();
+        this.props.handleChangeCallback && this.props.handleChangeCallback();
+    };
 
     /**
      * 模块讲修改
@@ -584,7 +584,7 @@ class DataList extends PureComponent {
      */
     componentWillUpdate(nextProps, nextState) {
         if (!isEqual(this.state.data, nextState.data)) {
-            this.props.onChange && this.props.onChange(this.state.data.list)
+            this.props.onChange && this.props.onChange(this.state.data.list);
         }
     }
 
@@ -593,7 +593,7 @@ class DataList extends PureComponent {
      */
     renderOperationButtons() {
         if (this.props.renderOperationButtons) {
-            return this.props.renderOperationButtons()
+            return this.props.renderOperationButtons();
         }
 
         return (
@@ -622,7 +622,7 @@ class DataList extends PureComponent {
                     >
                         <Button
                             onClick={() => {
-                                this.setState({ visibleImport: true })
+                                this.setState({ visibleImport: true });
                             }}
                         >
                             导入
@@ -642,35 +642,35 @@ class DataList extends PureComponent {
                                 this.setState(
                                     { exportLoading: true },
                                     async () => {
-                                        const columns = this.getColumns(false)
-                                        let data = this.state.data.list
+                                        const columns = this.getColumns(false);
+                                        let data = this.state.data.list;
                                         if (this.props.exportMore) {
                                             let data = await this.requestList({
-                                                pageSize: 1000000
-                                            })
+                                                pageSize: 1000000,
+                                            });
                                             data = decorateList(
                                                 data.list,
-                                                this.schema
-                                            )
+                                                this.schema,
+                                            );
                                         }
 
                                         if (this.meta.importTemplateUrl) {
                                             await exportDataByTemplate(
-                                                "导出数据",
+                                                '导出数据',
                                                 data,
                                                 columns,
-                                                this.meta.importTemplateUrl
-                                            )
+                                                this.meta.importTemplateUrl,
+                                            );
                                         } else {
                                             exportData(
-                                                "导出数据",
+                                                '导出数据',
                                                 data,
-                                                columns
-                                            )
+                                                columns,
+                                            );
                                         }
-                                        this.setState({ exportLoading: false })
-                                    }
-                                )
+                                        this.setState({ exportLoading: false }, () => message.info('导出当前页面数据成功'));
+                                    },
+                                );
                             }}
                         >
                             导出
@@ -678,7 +678,7 @@ class DataList extends PureComponent {
                     </Authorized>
                 )}
             </Fragment>
-        )
+        );
     }
 
     downloadImportTemplate() {
@@ -689,8 +689,8 @@ class DataList extends PureComponent {
      * @returns {*}
      */
     renderOperationBar() {
-        const { showSelect } = this.meta
-        const { selectedRows } = this.state
+        const { showSelect } = this.meta;
+        const { selectedRows } = this.state;
 
         return (
             <div className={styles.tableListOperator}>
@@ -708,7 +708,7 @@ class DataList extends PureComponent {
                     <Col>{this.renderOperationExtend()}</Col>
                 </Row>
             </div>
-        )
+        );
     }
 
     /**
@@ -720,15 +720,15 @@ class DataList extends PureComponent {
                 <Popconfirm
                     title="是否要删除选中的数据？"
                     onConfirm={e => {
-                        const { dispatch } = this.props
-                        const { selectedRows } = this.state
-                        this.handleDeleteMulti(selectedRows)
+                        const { dispatch } = this.props;
+                        const { selectedRows } = this.state;
+                        this.handleDeleteMulti(selectedRows);
                     }}
                 >
                     <Button>批量删除</Button>
                 </Popconfirm>
             </span>
-        )
+        );
     }
 
     /**
@@ -749,39 +749,39 @@ class DataList extends PureComponent {
      * @returns {*}
      */
     renderList(inProps = {}) {
-        let { loading } = this.props
-        const { showSelect, scroll, mini } = this.meta
-        const { data, listLoading, selectedRows } = this.state
+        let { loading } = this.props;
+        const { showSelect, scroll, mini } = this.meta;
+        const { data, listLoading, selectedRows } = this.state;
 
         // judge weather hide select
-        let otherProps = {}
+        let otherProps = {};
 
         if (!showSelect) {
-            otherProps.rowSelection = null
+            otherProps.rowSelection = null;
         }
 
         if (mini) {
-            otherProps.pagination = false
+            otherProps.pagination = false;
         }
 
-        const columns = this.getColumns()
+        const columns = this.getColumns();
 
         return (
             <StandardTable
                 bordered={true}
-                rowKey={this.meta.idKey || "id"}
+                rowKey={this.meta.idKey || 'id'}
                 selectedRows={selectedRows}
                 loading={!data || loading || listLoading}
                 data={data}
                 columns={columns}
                 scroll={scroll}
-                size={"small"}
+                size={'small'}
                 onSelectRow={this.handleSelectRows}
                 onChange={this.handleStandardTableChange}
                 {...otherProps}
                 {...inProps}
             />
-        )
+        );
     }
 
     /**
@@ -791,17 +791,17 @@ class DataList extends PureComponent {
      */
     renderInfoModal(customProps = {}) {
         if (this.props.renderInfoModal) {
-            return this.props.renderInfoModal()
+            return this.props.renderInfoModal();
         }
-        const { form } = this.props
-        const renderForm = this.props.renderForm || this.renderForm
-        const { resource, title, addArgs } = this.meta
-        const { visibleModal, infoData, action } = this.state
+        const { form } = this.props;
+        const renderForm = this.props.renderForm || this.renderForm;
+        const { resource, title, addArgs } = this.meta;
+        const { visibleModal, infoData, action } = this.state;
         const updateMethods = {
             handleVisibleModal: this.handleVisibleModal.bind(this),
             handleUpdate: this.handleUpdate.bind(this),
-            handleAdd: this.handleAdd.bind(this)
-        }
+            handleAdd: this.handleAdd.bind(this),
+        };
 
         return (
             visibleModal && (
@@ -821,13 +821,13 @@ class DataList extends PureComponent {
                     {...customProps}
                 />
             )
-        )
+        );
     }
 
     componentDidCatch(error, info) {
         // Display fallback UI
-        this.setState({ hasError: true })
-        console.log("component error", error)
+        this.setState({ hasError: true });
+        console.log('component error', error);
     }
 
     /**
@@ -852,7 +852,7 @@ class DataList extends PureComponent {
                     </Col>
                 </Row>
             </Form>
-        )
+        );
     }
 
     renderImportModal() {
@@ -862,7 +862,7 @@ class DataList extends PureComponent {
                 schema={this.schema}
                 onCancel={() => this.setState({ visibleImport: false })}
             />
-        )
+        );
     }
 
     renderSearchBar() {
@@ -870,32 +870,31 @@ class DataList extends PureComponent {
 
     render() {
 
-
-        const { visibleModal, visibleImport } = this.state
+        const { visibleModal, visibleImport } = this.state;
         let {
             renderOperationBar,
             renderSearchBar,
-            renderOperateColumn
-        } = this.props
+            renderOperateColumn,
+        } = this.props;
 
         // 操作栏
-        let operationBar = null
+        let operationBar = null;
         if (renderOperationBar) {
-            operationBar = renderOperationBar()
+            operationBar = renderOperationBar();
         } else if (this.props.renderOperationBar !== null) {
-            operationBar = this.renderOperationBar && this.renderOperationBar()
+            operationBar = this.renderOperationBar && this.renderOperationBar();
         }
 
         // 搜索栏
-        let searchBar = null
+        let searchBar = null;
         if (renderSearchBar) {
-            searchBar = renderSearchBar()
+            searchBar = renderSearchBar();
         } else if (renderSearchBar !== null) {
-            searchBar =  this.renderSearchBar && this.renderSearchBar()
+            searchBar = this.renderSearchBar && this.renderSearchBar();
         }
 
         return <Fragment>
-            <Card bordered={false} style={{ width: "100%" }}>
+            <Card bordered={false} style={{ width: '100%' }}>
                 <div className={styles.tableListForm}>{searchBar}</div>
                 <div className={styles.tableList}>
                     {this.renderSearchForm && (
@@ -910,8 +909,8 @@ class DataList extends PureComponent {
             {visibleModal && this.renderInfoModal()}
             {visibleImport && this.renderImportModal()}
             {this.renderExtend && this.renderExtend()}
-        </Fragment>
+        </Fragment>;
     }
 }
 
-export default DataList
+export default DataList;
